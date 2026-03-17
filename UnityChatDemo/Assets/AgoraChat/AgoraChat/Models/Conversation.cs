@@ -1,4 +1,5 @@
 using AgoraChat.SimpleJSON;
+using System;
 using System.Collections.Generic;
 #if !_WIN32
 using UnityEngine.Scripting;
@@ -545,9 +546,38 @@ namespace AgoraChat
         * @param direction	The query direction. See {@link MessageSearchDirection}.
         * @return           The list of retrieved messages.
         */
+        [Obsolete("Use LoadMessagesWithScopeAndFromIds instead")]
         public void LoadMessagesWithScope(string keywords, MessageSearchScope scope = MessageSearchScope.CONTENT, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < List<Message>> callback = null)
         {
             manager.LoadMessagesWithScope(Id, Type, keywords, timestamp, maxCount, from, direction, scope, callback);
+        }
+
+        /**
+        * \~chinese
+        * 加载指定范围内满足条件的消息（支持多个发送方）。
+        *
+        * @param keywords   查找关键字，字符串类型。
+        * @param timestamp  查询的起始时间戳。单位为毫秒。
+        * @param maxCount   查询的最大消息数。
+        * @param fromIds    消息发送方的用户 ID 列表。列表大小不能超过 10。若不设置该参数，SDK 搜索消息时会忽略该参数。
+        * @param direction	查询方向，详见 {@link MessageSearchDirection}。
+        * @param scope	    查询范围，详见 {@link MessageSearchScope}。
+        * @return           消息列表。
+        *
+        * \~english
+        * Loads messages within a specified scope that meet the conditions (supports multiple senders).
+        *
+        * @param keywords   The keyword for query. The data format is String.
+        * @param timestamp  The starting Unix timestamp for query, which is in milliseconds.
+        * @param maxCount   The maximum number of messages to retrieve.
+        * @param fromIds    The list of user IDs of message senders. The list size cannot exceed 10. If you do not set this parameter, the SDK ignores this parameter when retrieving messages.
+        * @param direction	The query direction. See {@link MessageSearchDirection}.
+        * @param scope	    The query direction. See {@link MessageSearchScope}.
+        * @return           The list of retrieved messages.
+        */
+        public void LoadMessagesWithScopeAndFromIds(string keywords, long timestamp = 0, int maxCount = 20, List<string> fromIds = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<List<Message>> callback = null)
+        {
+            manager.LoadMessagesWithScopeAndFromIds(Id, Type, keywords, timestamp, maxCount, fromIds, direction, scope, callback);
         }
 
         /**

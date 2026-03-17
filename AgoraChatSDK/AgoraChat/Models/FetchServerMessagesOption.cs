@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
 #if !_WIN32
 using UnityEngine.Scripting;
@@ -49,7 +50,21 @@ namespace AgoraChat
          *
          *  This attribute is used only for group message.
          */
+        [Obsolete("Use FromIds instead")]
         public string From;
+
+        /**
+         *  \~chinese
+         *  消息发送方的用户 ID 列表。
+         *
+         * 仅用于群组消息。
+         *
+         *  \~english
+         *  The list of user IDs of message senders.
+         *
+         *  This attribute is used only for group message.
+         */
+        public List<string> FromIds;
 
         /**
          *  \~chinese
@@ -128,6 +143,10 @@ namespace AgoraChat
             jo.AddWithoutNull("isSave", IsSave);
             jo.AddWithoutNull("direction", Direction.ToInt());
             jo.AddWithoutNull("from", From);
+            if (FromIds != null && FromIds.Count > 0)
+            {
+                jo.AddWithoutNull("fromIds", JsonObject.JsonArrayFromStringList(FromIds));
+            }
             jo.AddWithoutNull("types", JsonObject.JsonArrayFromIntList(GetListFromMsgTypes()));
             jo.AddWithoutNull("startTime", StartTime);
             jo.AddWithoutNull("endTime", EndTime);

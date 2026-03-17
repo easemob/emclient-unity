@@ -482,6 +482,75 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
+	     * 创建群组。
+		 *
+         * 群组创建成功后，会更新内存及数据库中的数据，多端多设备会收到相应的通知事件，然后将群组更新到内存及数据库中。
+		 *
+	     * 可通过设置 {@link IMultiDeviceDelegate} 监听相关事件，事件回调函数为 {@link onGroupMultiDevicesEvent((MultiDevicesOperation, string, List<string>)}。
+	     *
+	     * 异步方法。
+	     *
+	     * @param groupName     群组名称。该参数可选，不设置传 `null`。
+	     * @param options       群组创建时需设置的选项。该参数可选，不可为 `null`。详见 {@link GroupOptions}。
+	     *                      群组的其他选项如下：
+	     *                      - 群组最大成员数，默认值为 200；
+	     *                      - 群组类型，详见 {@link GroupStyle}；
+	     *                      - 邀请入群是否需要对方同意，默认为 `false`，即邀请后直接入群；
+	     *                      - 群详情扩展。
+	     * @param avatar        群组头像的 URL。该参数可选，不设置传 `null`。
+         * @param desc          群组描述。该参数可选，不设置传 `null`。
+	     * @param inviteMembers 群成员列表。该参数不可为 `null`。
+         * @param inviteReason  成员入群的邀请信息。该参数可选，不设置传 `null`。
+         * @param callback        创建结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Creates a group instance.
+		 *
+         * After the group is created, the data in the memory and database will be updated and multiple devices will receive the notification event and update the group to the memory and database. 
+		 *
+		 * You can set {@link IMultiDeviceDelegate} to listen for the event.
+		 *
+		 * If an event occurs, the callback function {@link onGroupMultiDevicesEvent((MultiDevicesOperation, string, List<string>)} will be triggered.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param groupName     The group name. It is optional. Pass `null` if you do not want to set this parameter.
+	     * @param options       The options for creating a group. They are optional and cannot be `null`. See {@link GroupOptions}.
+	     *                      The options are as follows:
+	     *                      - The maximum number of members allowed in the group. The default value is 200.
+	     *                      - The group style. See {@link GroupStyle}.
+	     *                      - Whether to ask for permission when inviting a user to join the group. The default value is `false`, indicating that invitees are automaticall added to the group without their permission.
+	     *                      - The extension of group details.
+	     * @param avatar        The URL of the group avatar. It is optional. Pass `null` if you do not want to set this parameter.
+         * @param desc          The group description. It is optional. Pass `null` if you do not want to set this parameter.
+	     * @param inviteMembers The group member array. The group owner ID is optional. This parameter cannot be `null`.
+	     * @param inviteReason  The group joining invitation. It is optional. Pass `null` if you do not want to set this parameter.
+         * @param callback      The operation callback. See {@link CallBack}.
+         */
+        public void CreateGroup(string groupName, GroupOptions options, string avatar = null, string desc = null, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("name", groupName);
+            if (null != options)
+            {
+                jo_param.AddWithoutNull("options", options.ToJsonObject());
+            }
+            jo_param.AddWithoutNull("avatar", avatar);
+            jo_param.AddWithoutNull("desc", desc);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(inviteMembers));
+            jo_param.AddWithoutNull("msg", inviteReason);
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Group>(jsonNode.AsObject);
+            };
+
+
+            NativeCall<Group>(SDKMethod.createGroupWithAvatar, jo_param, callback, process);
+        }
+
+        /**
+	     * \~chinese
 	     * 拒绝入群邀请。
 	     *
 	     * 异步方法。
@@ -567,6 +636,37 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.destroyGroup, jo_param, callback);
+        }
+
+        /**
+         * \~chinese
+         * 更新群组头像。
+         *
+         * 仅群主和群管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param groupId   群组 ID。
+         * @param avatar    群组头像的 URL。
+         * @param callback  操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Updates the group avatar.
+         *
+         * Only the group owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param groupId   The group ID.
+         * @param avatar    The URL of the group avatar.
+         * @param callback  The operation callback. See {@link CallBack}.
+         */
+        public void UpdateGroupAvatar(string groupId, string avatar, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("avatar", avatar);
+            NativeCall(SDKMethod.updateGroupAvatar, jo_param, callback);
         }
 
         /**
@@ -759,6 +859,50 @@ namespace AgoraChat
             };
 
             NativeCall<CursorResult<string>>(SDKMethod.getGroupMemberListFromServer, jo_param, callback, process);
+        }
+
+        /**
+		 * \~chinese
+		 * 从服务器获取群成员详细信息列表。
+		 *
+		 * 异步方法。
+		 *
+		 * @param groupId 	群组 ID。
+		 * @param cursor	从该游标位置开始获取数据，首次获取数据时传 `null` 或空字符串会从最新一条数据开始获取。
+		 * @param pageSize 	每页期望返回的群成员数。取值范围为 [1, 50]。
+		 * @param callback	操作结果回调。成功时返回包含群成员详细信息列表和用于下次获取数据的 cursor 的对象。如果是最后一页，cursor 返回结果为空字符串。失败时返回错误信息，详见 {@link ValueCallBack}。
+		 *
+		 * \~english
+		 * Gets a group's member info list from the server.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param groupId 	The group ID.
+		 * @param cursor	The cursor position from which to start to get data next time. Sets the parameter as `null` or empty string for the first time.
+		 * @param pageSize 	The number of group members per page. The value range is [1, 50].
+		 * @param callback	The completion callback. If this call succeeds, the SDK returns the group member info list and the cursor for getting data next time. For the last page, the return value of cursor is an empty string. If this call fails, an error will be returned. See {@link ValueCallBack}.
+		 *
+		 */
+        public void FetchGroupMemberInfoFromServer(string groupId, string cursor, int pageSize, ValueCallBack<CursorResult<GroupMemberInfo>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("cursor", cursor ?? "");
+            jo_param.AddWithoutNull("pageSize", pageSize);
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<GroupMemberInfo> cursor_msg = new CursorResult<GroupMemberInfo>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<GroupMemberInfo>(jn);
+                });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
+            };
+
+            NativeCall<CursorResult<GroupMemberInfo>>(SDKMethod.fetchGroupMemberInfoFromServer, jo_param, callback, process);
         }
 
         /**
@@ -1686,6 +1830,18 @@ namespace AgoraChat
                         {
                             string userId = jsonNode["userId"];
                             it.OnMemberExitedFromGroup(groupId, userId);
+                        }
+                        break;
+                    case SDKMethod.onMembersJoinedFromGroup:
+                        {
+                            List<string> members = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnMembersJoinedFromGroup(groupId, members);
+                        }
+                        break;
+                    case SDKMethod.onMembersExitedFromGroup:
+                        {
+                            List<string> members = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnMembersExitedFromGroup(groupId, members);
                         }
                         break;
                     case SDKMethod.onAnnouncementChangedFromGroup:

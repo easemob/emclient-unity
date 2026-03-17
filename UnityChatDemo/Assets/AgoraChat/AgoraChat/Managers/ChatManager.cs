@@ -934,6 +934,7 @@ namespace AgoraChat
          * @param body      The modified message body.
          * @param callBack The result callback. See {@link #CallBack()}.
          */
+        [Obsolete]
         public void ModifyMessage(string messageId, MessageBody.TextBody body, ValueCallBack<Message> callback = null)
         {
             JSONObject jo_param = new JSONObject();
@@ -946,6 +947,55 @@ namespace AgoraChat
             };
 
             NativeCall<Message>(SDKMethod.modifyMessage, jo_param, callback, process);
+        }
+
+        /**
+         * \~chinese
+         * 修改本地以及服务端消息。
+         *
+         * - 文本/自定义消息：支持修改消息内容（body）和扩展 `ext`。
+         * - 文件/视频/音频/图片/位置/合并转发消息：只支持修改消息扩展 `ext`。
+         * - 命令消息：不支持修改。
+         *
+         * 该方法会同时更新服务器和本地的消息，消息 ID 不会更新。
+         *
+         * @param messageId       要修改的消息 ID。
+         * @param body            修改后的消息 body。只有文本消息和自定义消息支持，传 null 表示不修改。
+         * @param attributes      修改后的消息扩展信息，将会覆盖之前的扩展信息，传 null 表示不修改。
+         * @param callback        该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
+         * 如果body和attributes都为null，会返回参数错误。
+         *
+         * \~english
+         * Modifies a message both in the local storage and server.
+         *
+         * - Text and custom message: Both the message body `body` and extension information `ext` can be modified.
+         * - Image/voice/video/file/combined message: Only the message extension field `ext` can be modified.
+         * - Command message: This type of message cannot be modified.
+         *
+         * Note that the message ID cannot be changed.
+         *
+         * @param messageId       The ID of the message for modification.
+         * @param body            The modified message body. You can only modify the body of a text message and a custom message. The value `null` indicates that the message body remains unchanged.
+         * @param attributes      The modified message extension information. The new extension information will overwrite the previous. The value `null` indicates that the message extension information remains unchanged.
+         * @param callback        The completion block, which contains the error message if the method fails.
+         * If both body and attributes are null, the parameter error will be returned.
+         */
+        public void ModifyMessage(string messageId, IMessageBody body = null, Dictionary<string, AttributeValue> attributes = null, ValueCallBack<Message> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgId", messageId);
+            if (body != null)
+            {
+                jo_param.AddWithoutNull("body", body.ToJsonObject());
+            }
+            jo_param.AddWithoutNull("attributes", JsonObject.JsonObjectFromAttributes(attributes));
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            };
+
+            NativeCall<Message>(SDKMethod.modifyMessageWithExt, jo_param, callback, process);
         }
 
         /**
@@ -1224,6 +1274,54 @@ namespace AgoraChat
             };
 
             NativeCall<Dictionary<string, List<MessageReaction>>>(SDKMethod.fetchReactionList, jo_param, callback, process);
+        }
+
+        /**
+        * \~chinese
+        * 通过关键词从本地数据库中获取消息，返回会话 ID 及消息 ID 数组。
+        * SDK 返回的消息按时间顺序排列。
+        *
+        * 异步方法。
+        *
+        * @param keywords      搜索关键词，设为 `null` 表示忽略该参数。
+        * @param timestamp     搜索开始的 Unix 时间戳。单位为毫秒。如果该参数设置的时间戳为负数，则从最新消息向前获取。
+        * @param from          消息发送方。设为 `null` 表示忽略该参数。
+        * @param direction     消息搜索方向，详见 {@link MessageSearchDirection}。
+        *                      - `UP`：按消息时间戳的逆序获取。
+        *                      - `DOWN`：按消息时间戳的顺序获取。
+        * @param scope         消息搜索范围，详见 {@link MessageSearchScope}。
+        * @param callback      处理结果回调，包含会话 ID 及对应的消息 ID 列表。
+        *
+        * \~english
+        * Loads messages with the specified keyword from the local database, returning a dictionary containing conversation IDs and message ID arrays.
+        * The SDK returns messages in chronological order.
+        *
+        * This is an asynchronous method.
+        *
+        * @param keywords      The keyword for message search. If you set this parameter as `null`, the SDK ignores this parameter when retrieving messages.
+        * @param timestamp     The Unix timestamp threshold for message search. The unit is millisecond. If you set this parameter as a negative value, the SDK loads messages from the latest one.
+        * @param from          The sender of the message. If you set this parameter as `null`, the SDK ignores this parameter when retrieving messages.
+        * @param direction     The message search direction. See {@link MessageSearchDirection}.
+        *                      - `UP`: The SDK retrieves messages in the descending order of the timestamp included in them.
+        *                      - `DOWN`：The SDK retrieves messages in the ascending order of the timestamp included in them.
+        * @param scope         The message search scope. See {@link MessageSearchScope}.
+        * @param callback      The result callback, which contains the conversation IDs and corresponding message ID lists.
+        */
+        public void LoadConversationMessagesWithKeyword(string keywords, long timestamp = 0, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<Dictionary<string, List<string>>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("keywords", keywords);
+            jo_param.AddWithoutNull("timestamp", timestamp);
+            jo_param.AddWithoutNull("from", from);
+            jo_param.AddWithoutNull("direction", direction == MessageSearchDirection.UP ? 0 : 1);
+            jo_param.AddWithoutNull("scope", (int)scope);
+
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.StringListDictionaryFromJsonObject(jsonNode);
+            };
+
+            NativeCall<Dictionary<string, List<string>>>(SDKMethod.loadConversationMessagesWithKeyword, jo_param, callback, process);
         }
 
         /**
@@ -1551,6 +1649,35 @@ namespace AgoraChat
             };
 
             NativeCall<List<Message>>(SDKMethod.getPinnedMessagesFromServer, jo_param, callback, process);
+        }
+
+        /**
+         * \~chinese
+         * 从 SDK 本地数据库获取指定 ID 的消息，一次最多获取 20 条消息，返回的消息按照时间倒序排列。
+         *
+         * @param messageIdList     消息 ID 列表。
+         * @param conversationId    消息 ID 所在的会话 ID。
+         * @param callback          成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Gets messages with the specified IDs from the local database. A maximum of 20 messages can be retrieved at a time, and the returned messages are sorted in reverse chronological order.
+         *
+         * @param messageIdList     The message ID list.
+         * @param conversationId    The conversation ID which messages in.
+         * @param callback          If success, the list of messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        public void LoadMessages(List<string> messageIdList, string conversationId, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
+            jo_param.AddWithoutNull("convId", conversationId);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.loadMessages, jo_param, callback, process);
         }
 
         /**

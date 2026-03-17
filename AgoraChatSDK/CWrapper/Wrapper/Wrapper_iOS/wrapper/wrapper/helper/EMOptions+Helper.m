@@ -51,6 +51,8 @@
     else
         options = [EMOptions optionsWithAppId:aJson[@"appId"]];
 
+    options.platform = EMSDKPlatformUnity;  // Unity platform = 3
+
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];
     options.enableConsoleLog = [aJson[@"debugModel"] boolValue];
     options.enableRequireReadAck = [aJson[@"requireAck"] boolValue];

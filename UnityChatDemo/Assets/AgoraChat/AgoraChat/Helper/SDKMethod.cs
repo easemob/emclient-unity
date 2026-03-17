@@ -103,17 +103,20 @@ namespace AgoraChat
         internal const string removeReaction = "removeReaction";
         internal const string fetchReactionList = "fetchReactionList";
         internal const string fetchReactionDetail = "fetchReactionDetail";
+        internal const string loadConversationMessagesWithKeyword = "loadConversationMessagesWithKeyword";
         internal const string reportMessage = "reportMessage";
         internal const string removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
         internal const string removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
         internal const string pinConversation = "pinConversation";
         internal const string removeEarlierHistoryMessages = "removeEarlierHistoryMessages";
         internal const string modifyMessage = "modifyMessage";
+        internal const string modifyMessageWithExt = "modifyMessageWithExt";
         internal const string downloadCombineMessages = "downloadCombineMessages";
         internal const string markConversations = "markConversations";
         internal const string deleteAllMessagesAndConversations = "deleteAllMessagesAndConversations";
         internal const string pinMessage = "pinMessage";
         internal const string getPinnedMessagesFromServer = "getPinnedMessagesFromServer";
+        internal const string loadMessages = "loadMessages";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";
@@ -142,6 +145,7 @@ namespace AgoraChat
         internal const string loadMsgWithMsgTypeList = "loadMsgWithMsgTypeList";
         internal const string loadMsgWithTime = "loadMsgWithTime";
         internal const string loadMsgWithScope = "loadMsgWithScope";
+        internal const string loadMsgWithScopeAndFromIds = "loadMsgWithScopeAndFromIds";
         internal const string messageCount = "messageCount";
         internal const string messageCountWithTS = "messageCountWithTS";
         internal const string pinnedMessages = "pinnedMessages";
@@ -201,8 +205,10 @@ namespace AgoraChat
         internal const string getJoinedGroupsFromServerSimple = "getJoinedGroupsFromServerSimple";
         internal const string getPublicGroupsFromServer = "getPublicGroupsFromServer";
         internal const string createGroup = "createGroup";
+        internal const string createGroupWithAvatar = "createGroupWithAvatar";
         internal const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
         internal const string getGroupMemberListFromServer = "getGroupMemberListFromServer";
+        internal const string fetchGroupMemberInfoFromServer = "fetchGroupMemberInfoFromServer";
         internal const string getGroupBlockListFromServer = "getGroupBlockListFromServer";
         internal const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
         internal const string getGroupAllowListFromServer = "getGroupWhiteListFromServer";
@@ -219,6 +225,7 @@ namespace AgoraChat
         internal const string updateDescription = "updateDescription";
         internal const string leaveGroup = "leaveGroup";
         internal const string destroyGroup = "destroyGroup";
+        internal const string updateGroupAvatar = "updateGroupAvatar";
         internal const string blockGroup = "blockGroup";
         internal const string unblockGroup = "unblockGroup";
         internal const string updateGroupOwner = "updateGroupOwner";
@@ -395,6 +402,8 @@ namespace AgoraChat
         internal const string onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
         internal const string onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
         internal const string onMemberExitedFromGroup = "onMemberExitedFromGroup";
+        internal const string onMembersJoinedFromGroup = "onMembersJoinedFromGroup";
+        internal const string onMembersExitedFromGroup = "onMembersExitedFromGroup";
         internal const string onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
         internal const string onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
         internal const string onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";

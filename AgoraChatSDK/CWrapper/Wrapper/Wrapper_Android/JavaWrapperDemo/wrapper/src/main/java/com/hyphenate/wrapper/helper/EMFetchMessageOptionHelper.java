@@ -25,6 +25,14 @@ public class EMFetchMessageOptionHelper {
         if (json.has("from")){
             options.setFrom(json.getString("from"));
         }
+        if (json.has("fromIds")){
+            List<String> fromIds = new ArrayList<>();
+            JSONArray fromIdsArray = json.getJSONArray("fromIds");
+            for (int i = 0; i < fromIdsArray.length(); i++) {
+                fromIds.add(fromIdsArray.getString(i));
+            }
+            options.setFromIds(fromIds);
+        }
         if (json.has("types")){
             List<EMMessage.Type> list = new ArrayList<>();
             JSONArray array = json.getJSONArray("types");

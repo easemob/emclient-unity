@@ -125,6 +125,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = fetchReactionList(jsonObject, callback);
         } else if (EMSDKMethod.fetchReactionDetail.equals(method)) {
             ret = fetchReactionDetail(jsonObject, callback);
+        } else if (EMSDKMethod.loadConversationMessagesWithKeyword.equals(method)) {
+            ret = loadConversationMessagesWithKeyword(jsonObject, callback);
         } else if (EMSDKMethod.reportMessage.equals(method)) {
             ret = reportMessage(jsonObject, callback);
         } else if (EMSDKMethod.getConversationsFromServerWithPage.equals(method)) {
@@ -137,6 +139,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = fetchHistoryMessagesBy(jsonObject, callback);
         } else if (EMSDKMethod.modifyMessage.equals(method)) {
             ret = modifyMessage(jsonObject, callback);
+        } else if (EMSDKMethod.modifyMessageWithExt.equals(method)) {
+            ret = modifyMessageWithExt(jsonObject, callback);
         } else if (EMSDKMethod.downloadCombineMessages.equals(method)) {
             ret = downloadCombineMessages(jsonObject, callback);
         } else if (EMSDKMethod.markConversations.equals(method)) {
@@ -147,6 +151,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = pinMessage(jsonObject, callback);
         } else if (EMSDKMethod.getPinnedMessagesFromServer.equals(method)) {
             ret = getPinnedMessagesFromServer(jsonObject, callback);
+        } else if (EMSDKMethod.loadMessages.equals(method)) {
+            ret = loadMessages(jsonObject, callback);
         }
         else {
             super.onMethodCall(method, jsonObject, callback);
@@ -826,6 +832,52 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String loadConversationMessagesWithKeyword(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String keywords = params.getString("keywords");
+        long timestamp = params.getLong("timestamp");
+        String from = null;
+        if (params.has("from")) {
+            from = params.getString("from");
+        }
+        int directionInt = params.getInt("direction");
+        int scopeInt = params.getInt("scope");
+
+        EMConversation.EMSearchDirection direction = directionInt == 0 ? 
+            EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+        EMConversation.EMMessageSearchScope scope = EMMode.searchScopeFromInt(scopeInt);
+
+        EMClient.getInstance().chatManager().asyncLoadConversationMessagesWithKeyword(
+            keywords, timestamp, from, direction, scope,
+            new EMCommonValueCallback<Map<String, List<String>>>(callback) {
+                @Override
+                public void onSuccess(Map<String, List<String>> object) {
+                    JSONObject jo = new JSONObject();
+                    try {
+                        if (object != null) {
+                            for (Map.Entry<String, List<String>> entry : object.entrySet()) {
+                                JSONArray jsonArray = new JSONArray();
+                                for (String msgId : entry.getValue()) {
+                                    jsonArray.put(msgId);
+                                }
+                                jo.put(entry.getKey(), jsonArray);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        updateObject(jo);
+                    }
+                }
+
+                @Override
+                public void onError(int code, String error) {
+                    HyphenateException e = new HyphenateException(code, error);
+                    callback.onError(HyphenateExceptionHelper.toJson(e));
+                }
+            });
+        return null;
+    }
+
     private String fetchReactionDetail(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String msgId = params.getString("msgId");
         String reaction = params.getString("reaction");
@@ -930,6 +982,65 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String modifyMessageWithExt(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String msgId = params.optString("msgId");
+
+        EMMessageBody body = null;
+        if (params.has("body")) {
+            JSONObject bodyJson = params.optJSONObject("body");
+            body = EMMessageBodyHelper.textBodyFromJson(bodyJson.optJSONObject("body"));
+        }
+
+        Map<String, Object> ext = null;
+        if (params.has("attributes")) {
+            JSONObject attributesJson = params.optJSONObject("attributes");
+            ext = new java.util.HashMap<>();
+            java.util.Iterator<String> keys = attributesJson.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                JSONObject valueObj = attributesJson.optJSONObject(key);
+                if (valueObj != null) {
+                    String type = valueObj.optString("type");
+                    String value = valueObj.optString("value");
+
+                    try {
+                        // 根据类型转换value
+                        if ("b".equals(type)) {
+                            ext.put(key, Boolean.parseBoolean(value));
+                        } else if ("i".equals(type)) {
+                            ext.put(key, Integer.parseInt(value));
+                        } else if ("l".equals(type)) {
+                            ext.put(key, Long.parseLong(value));
+                        } else if ("f".equals(type)) {
+                            ext.put(key, Float.parseFloat(value));
+                        } else if ("d".equals(type)) {
+                            ext.put(key, Double.parseDouble(value));
+                        } else if ("str".equals(type) || "jstr".equals(type)) {
+                            ext.put(key, value);
+                        }
+                    } catch (NumberFormatException e) {
+                        // 数值解析失败，跳过该字段
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, ext, new EMCommonValueCallback<EMMessage>(callback) {
+            @Override
+            public void onSuccess(EMMessage object) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = EMMessageHelper.toJson(object);
+                    updateObject(jsonObject);
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return null;
+    }
+
     private String downloadCombineMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMMessage msg = EMMessageHelper.fromJson(params.optJSONObject("msg"));
         EMClient.getInstance().chatManager().downloadAndParseCombineMessage(msg, new EMCommonValueCallback<List<EMMessage>>(callback){
@@ -993,6 +1104,32 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                         e.printStackTrace();
                     }
                 }
+        });
+        return null;
+    }
+
+    private String loadMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String convId = params.getString("convId");
+        List<String> msgIds = EMHelper.stringListFromJsonArray(params.getJSONArray("msgIds"));
+        EMClient.getInstance().chatManager().asyncLoadMessages(msgIds, convId, new EMCommonValueCallback<List<EMMessage>>(callback){
+            @Override
+            public void onSuccess(List<EMMessage> messages) {
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    for (EMMessage msg : messages) {
+                        jsonArray.put(EMMessageHelper.toJson(msg));
+                    }
+                    updateObject(jsonArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                HyphenateException e = new HyphenateException(code, error);
+                callback.onError(HyphenateExceptionHelper.toJson(e));
+            }
         });
         return null;
     }

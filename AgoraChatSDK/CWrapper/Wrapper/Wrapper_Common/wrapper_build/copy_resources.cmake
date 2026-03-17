@@ -52,4 +52,4 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${DEPEND_DIR}/curl_7
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${DEPEND_DIR}/sqlcipher_4.4.3_share_universal_boringssl/lib" "${TARGET_RESOURCES_LIB_DIR}")
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${DEPEND_DIR}/libevent_2.1.10_share_universal/lib" "${TARGET_RESOURCES_LIB_DIR}")
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${DEPEND_DIR}/libzip_1.11.2_share_universal/lib" "${TARGET_RESOURCES_LIB_DIR}")
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${DEPEND_DIR}/aosl_1.2.2_release" "${TARGET_RESOURCES_DIR}")
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${DEPEND_DIR}/aosl_1.3.0_release" "${TARGET_RESOURCES_DIR}")

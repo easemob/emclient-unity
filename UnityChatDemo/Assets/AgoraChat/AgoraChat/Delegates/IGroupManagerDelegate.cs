@@ -309,6 +309,36 @@ namespace AgoraChat
 
         /**
 		 * \~chinese
+		 * 批量用户加入群组回调。
+		 *
+		 * @param groupId   	群组 ID。
+		 * @param members   加入群组的用户名列表。
+		 *
+		 * \~english
+		 * Occurs when users join a group.
+		 *
+		 * @param groupId       The group ID.
+		 * @param members   The users that join the group.
+		 */
+        void OnMembersJoinedFromGroup(string groupId, List<string> members);
+
+        /**
+		 * \~chinese
+		 * 批量用户离开群组回调。
+		 *
+		 * @param groupId       群组 ID。
+		 * @param members    离开群组的用户名列表。
+		 *
+		 * \~english
+		 * Occurs when users leave the group.
+		 *
+		 * @param groupId       The group ID.
+		 * @param members    The users that leave the group.
+		 */
+        void OnMembersExitedFromGroup(string groupId, List<string> members);
+
+        /**
+		 * \~chinese
 		 * 群公告更新回调。
 		 * 
 		 * @param groupId      群组 ID。

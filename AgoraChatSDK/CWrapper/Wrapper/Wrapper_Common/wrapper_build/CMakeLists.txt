@@ -197,7 +197,7 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
 		find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.11/lib)
 		find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.11/lib)
 		find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.11/lib)
-		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/aosl_1.2.2-x86-release)
+		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/aosl_1.3.0-x86-release)
 		find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libzip_1.11.2-x86-static-mt/lib)
 
     elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "")
@@ -215,7 +215,7 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
 		find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.11/lib)
 		find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.11/lib)
 		find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.11/lib)
-		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/aosl_1.2.2-x64-release)
+		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/aosl_1.3.0-x64-release)
 		find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libzip_1.11.2-x64-static-mt/lib)
     endif()
     message(STATUS "Found zlib: ${zlib}")
@@ -239,7 +239,7 @@ else()
 	find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.11/lib)
 	find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.11/lib)
 	find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.11/lib)
-	find_library(libaosl_chat NAMES aosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/aosl_1.2.2_release)
+	find_library(libaosl_chat NAMES aosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/aosl_1.3.0_release)
 	find_library(libzip NAMES zip.5 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/lib)
 	message(STATUS "Found libz.tbd: ${libz_tbd}")
 	message(STATUS "Found Security.framework: ${security_framework}")
@@ -325,6 +325,7 @@ ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/src/curl_easy.cpp
     ${EMCLIENT_LINUX_PATH}/protocol/unreadul.cpp
     ${EMCLIENT_LINUX_PATH}/protocol/roamconfig.cpp
     ${EMCLIENT_LINUX_PATH}/protocol/muc.cpp
+    ${EMCLIENT_LINUX_PATH}/protocol/offlinemessagerecord.cpp
     ${EMCLIENT_LINUX_PATH}/protocol/generated/conferencebody.pb.cc
     ${EMCLIENT_LINUX_PATH}/protocol/generated/jid.pb.cc
     ${EMCLIENT_LINUX_PATH}/protocol/generated/keyvalue.pb.cc
@@ -441,6 +442,9 @@ if(APPLE)
 		FRAMEWORK TRUE
 		FRAMEWORK_VERSION A
 		XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.easemob.hyphenateChat-mac"
+		XCODE_ATTRIBUTE_DWARF_VERSION "4"
+		XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+		XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
 		MACOSX_FRAMEWORK_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist
 	)
 
@@ -503,6 +507,9 @@ if(APPLE)
 		INSTALL_NAME_DIR "@rpath"
 		INSTALL_NAME "@rpath/$(EXECUTABLE_PATH)"
 		BUILD_RPATH "@loader_path/../Resources"
+		XCODE_ATTRIBUTE_DWARF_VERSION "4"
+		XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+		XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
 	)
 else()
 	target_link_libraries(${SdkWrapper} PRIVATE 
@@ -543,6 +550,9 @@ if(APPLE)
 		INSTALL_NAME_DIR "@rpath"
 		INSTALL_NAME "@rpath/$(EXECUTABLE_PATH)"
 		BUILD_RPATH "@loader_path/../Resources"
+		XCODE_ATTRIBUTE_DWARF_VERSION "4"
+		XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+		XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
 	)
 endif()
 
@@ -573,6 +583,9 @@ if(APPLE)
     	    BUNDLE TRUE
             MACOSX_BUNDLE TRUE
 	    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.easemob.ChatCWrapper"
+	    XCODE_ATTRIBUTE_DWARF_VERSION "4"
+	    XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+	    XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
             MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist
 	)
 

@@ -6,6 +6,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
 import com.hyphenate.chat.EMGroupOptions;
 import com.hyphenate.chat.EMMucSharedFile;
+import com.hyphenate.chat.EMGroupMemberInfo;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.wrapper.listeners.EMWrapperGroupListener;
 import com.hyphenate.wrapper.util.EMHelper;
@@ -46,10 +47,14 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = getPublicGroupsFromServer(jsonObject, callback);
         } else if (EMSDKMethod.createGroup.equals(method)) {
             ret = createGroup(jsonObject, callback);
+        } else if (EMSDKMethod.createGroupWithAvatar.equals(method)) {
+            ret = createGroupWithAvatar(jsonObject, callback);
         } else if (EMSDKMethod.getGroupSpecificationFromServer.equals(method)) {
             ret = getGroupSpecificationFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupMemberListFromServer.equals(method)) {
             ret = getGroupMemberListFromServer(jsonObject, callback);
+        } else if (EMSDKMethod.fetchGroupMemberInfoFromServer.equals(method)) {
+            ret = fetchGroupMemberInfoFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupMuteListFromServer.equals(method)) {
             ret = getGroupMuteListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupWhiteListFromServer.equals(method)) {
@@ -82,6 +87,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = leaveGroup(jsonObject, callback);
         } else if (EMSDKMethod.destroyGroup.equals(method)) {
             ret = destroyGroup(jsonObject, callback);
+        } else if (EMSDKMethod.updateGroupAvatar.equals(method)) {
+            ret = updateGroupAvatar(jsonObject, callback);
         } else if (EMSDKMethod.blockGroup.equals(method)) {
             ret = blockGroup(jsonObject, callback);
         } else if (EMSDKMethod.unblockGroup.equals(method)) {
@@ -290,6 +297,64 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         return null;
     }
 
+    private String createGroupWithAvatar(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String groupName = null;
+
+        if (params.has("name")){
+            groupName = params.getString("name");
+        }
+
+        String avatar = null;
+        if (params.has("avatar")){
+            avatar = params.getString("avatar");
+        }
+
+        String desc = null;
+        if(params.has("desc")){
+            desc = params.getString("desc");
+        }
+
+        String[] members = null;
+        if(params.has("userIds")){
+            JSONArray inviteMembers = params.getJSONArray("userIds");
+            members = new String[inviteMembers.length()];
+            for (int i = 0; i < inviteMembers.length(); i++) {
+                members[i] = inviteMembers.getString(i);
+            }
+        }
+        if (members == null) {
+            members = new String[0];
+        }
+        String inviteReason = null;
+
+        if (params.has("msg")){
+            inviteReason = params.getString("msg");
+        }
+
+        EMGroupOptions options = null;
+        if (params.has("options")) {
+            options = EMGroupOptionsHelper.fromJson(params.getJSONObject("options"));
+        }
+
+        EMCommonValueCallback<EMGroup> callBack = new EMCommonValueCallback<EMGroup>(callback) {
+            @Override
+            public void onSuccess(EMGroup object) {
+                JSONObject jo = null;
+                try {
+                    jo = EMGroupHelper.toJson(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jo);
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncCreateGroup(groupName, avatar, desc, members, inviteReason, options,
+                callBack);
+        return null;
+    }
+
     private String getGroupSpecificationFromServer(JSONObject params, EMWrapperCallback callback)
             throws JSONException {
         String groupId = params.getString("groupId");
@@ -341,6 +406,34 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         };
 
         EMClient.getInstance().groupManager().asyncFetchGroupMembers(groupId, cursor, pageSize, callBack);
+        return null;
+    }
+
+    private String fetchGroupMemberInfoFromServer(JSONObject params, EMWrapperCallback callback)
+            throws JSONException {
+        String groupId = params.getString("groupId");
+        String cursor = null;
+        if(params.has("cursor")){
+            cursor = params.getString("cursor");
+        }
+        int pageSize = params.getInt("pageSize");
+
+        EMCommonValueCallback<EMCursorResult<EMGroupMemberInfo>> callBack = new EMCommonValueCallback<EMCursorResult<EMGroupMemberInfo>>(
+                callback) {
+            @Override
+            public void onSuccess(EMCursorResult<EMGroupMemberInfo> object) {
+                JSONObject jo = null;
+                try {
+                    jo = EMCursorResultHelper.toJson(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jo);
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncFetchGroupMembersInfo(groupId, cursor, pageSize, callBack);
         return null;
     }
 
@@ -615,6 +708,15 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String destroyGroup(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         EMClient.getInstance().groupManager().asyncDestroyGroup(groupId,
+                new EMCommonCallback(callback));
+
+        return null;
+    }
+
+    private String updateGroupAvatar(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String groupId = params.getString("groupId");
+        String avatar = params.getString("avatar");
+        EMClient.getInstance().groupManager().asyncChangeGroupAvatar(groupId, avatar,
                 new EMCommonCallback(callback));
 
         return null;

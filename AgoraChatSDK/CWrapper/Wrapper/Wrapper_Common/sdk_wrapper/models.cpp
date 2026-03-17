@@ -861,6 +861,9 @@ namespace sdk_wrapper
                         writer.Key("thumbnailWidth");
                         writer.Double(ptr->thumbnailSize().mWidth);
 
+                        writer.Key("isGif");
+                        writer.Bool(ptr->isGif());
+
                         //writer.Key("ThumbnaiDownStatus");
                         //writer.Int((int)ptr->thumbnailDownloadStatus());
 
@@ -1194,6 +1197,11 @@ namespace sdk_wrapper
             }
 
             ptr->setThumbnailSize(thumbnail_size);
+
+            if (body.HasMember("isGif") && body["isGif"].IsBool()) {
+                bool isGif = body["isGif"].GetBool();
+                ptr->setGif(isGif);
+            }
 
             //if (body.HasMember("sendOriginalImage") && body["sendOriginalImage"].IsBool()) {
             //    bool b = body["sendOriginalImage"].GetBool();            
@@ -2450,6 +2458,9 @@ namespace sdk_wrapper
         writer.Key("isDisabled");
         writer.Bool(group->isDisabled());
 
+        writer.Key("avatar");
+        writer.String(group->groupAvatar().c_str());
+
         writer.EndObject();
     }
 
@@ -2458,6 +2469,42 @@ namespace sdk_wrapper
         writer.StartArray();
         for (int i = 0; i < list.size(); i++) {
             ToJsonObject(writer, list[i]);
+        }
+        writer.EndArray();
+    }
+
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, EMMucMemberInfoPtr mucMemberInfo)
+    {
+        if (nullptr == mucMemberInfo) return;
+
+        writer.StartObject();
+
+        writer.Key("memberId");
+        writer.String(mucMemberInfo->userId.c_str());
+
+        writer.Key("joinedTimestamp");
+        writer.Uint64(mucMemberInfo->joinTimestamp);
+
+        writer.Key("role");
+        int role = -1;
+        switch (mucMemberInfo->role)
+        {
+            case EMMucRole::Member: role = 0; break;
+            case EMMucRole::Admin:  role = 1; break;
+            case EMMucRole::Owner:  role = 2; break;
+            default: role = -1; break;
+        }
+        writer.Int(role);
+
+        writer.EndObject();
+    }
+
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMMucMemberInfoList& list)
+    {
+        writer.StartArray();
+        for (int i = 0; i < list.size(); i++) {
+            EMMucMemberInfoPtr ptr = std::make_shared<EMMucMemberInfo>(list[i]);
+            ToJsonObject(writer, ptr);
         }
         writer.EndArray();
     }
@@ -2747,6 +2794,25 @@ namespace sdk_wrapper
             writer.StartArray();
             MessageReaction::ToJsonObject(writer, reaction);
             writer.EndArray();
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+
+    string CursorResult::ToJson(string cursor, const EMMucMemberInfoList& memberInfoList)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            Group::ToJsonObject(writer, memberInfoList);
         }
         writer.EndObject();
 
@@ -3650,6 +3716,11 @@ namespace sdk_wrapper
         if (jnode.HasMember("from") && jnode["from"].IsString()) {
             std::string from = jnode["from"].GetString();
             option->setFrom(from);
+        }
+
+        if (jnode.HasMember("fromIds") && jnode["fromIds"].IsArray()) {
+            vector<string> fromIds = MyJson::FromJsonObjectToVector(jnode["fromIds"]);
+            option->setFromIds(fromIds);
         }
 
         if (jnode.HasMember("types") && jnode["types"].IsArray()) {

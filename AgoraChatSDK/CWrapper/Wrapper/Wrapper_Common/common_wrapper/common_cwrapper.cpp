@@ -103,17 +103,20 @@ void InitManagerMap()
 	func_map_chat_manager["removeReaction"] = ChatManager_RemoveReaction;
 	func_map_chat_manager["fetchReactionList"] = ChatManager_GetReactionList;
 	func_map_chat_manager["fetchReactionDetail"] = ChatManager_GetReactionDetail;
+	func_map_chat_manager["loadConversationMessagesWithKeyword"] = ChatManager_LoadConversationMessagesWithKeyword;
     func_map_chat_manager["removeMessagesFromServerWithMsgIds"] = ChatManager_RemoveMessagesFromServerWithMsgIds;
     func_map_chat_manager["removeMessagesFromServerWithTs"] = ChatManager_RemoveMessagesFromServerWithTs;
     func_map_chat_manager["pinConversation"] = ChatManager_PinConversation;
     func_map_chat_manager["getMessagesCount"] = ChatManager_GetMessagesCount;
     func_map_chat_manager["removeEarlierHistoryMessages"] = ChatManager_RemoveEarlierHistoryMessages;
     func_map_chat_manager["modifyMessage"] = ChatManager_ModifyMessage;
+    func_map_chat_manager["modifyMessageWithExt"] = ChatManager_ModifyMessageWithExt;
     func_map_chat_manager["downloadCombineMessages"] = ChatManager_DownloadCombineMessages;
     func_map_chat_manager["markConversations"] = ChatManager_MarkConversations;
     func_map_chat_manager["deleteAllMessagesAndConversations"] = ChatManager_DeleteAllMessagesAndConversations;
     func_map_chat_manager["pinMessage"] = ChatManager_PinMessage;
     func_map_chat_manager["getPinnedMessagesFromServer"] = ChatManager_GetPinnedMessagesFromServer;
+    func_map_chat_manager["loadMessages"] = ChatManager_LoadMessages;
 
 	manager_map["EMChatManager"] = func_map_chat_manager;
 
@@ -141,13 +144,16 @@ void InitManagerMap()
 	func_map_group_manager["isMemberInWhiteListFromServer"] = GroupManager_FetchIsMemberInWhiteList;
     func_map_group_manager["isMemberInMuteListFromServer"] = GroupManager_FetchIsMemberInMuteList;
 	func_map_group_manager["createGroup"] = GroupManager_CreateGroup;
+	func_map_group_manager["createGroupWithAvatar"] = GroupManager_CreateGroupWithAvatar;
 	func_map_group_manager["declineInvitationFromGroup"] = GroupManager_DeclineInvitationFromGroup;
 	func_map_group_manager["declineJoinApplication"] = GroupManager_DeclineJoinGroupApplication;
 	func_map_group_manager["destroyGroup"] = GroupManager_DestoryGroup;
+	func_map_group_manager["updateGroupAvatar"] = GroupManager_UpdateGroupAvatar;
 	func_map_group_manager["downloadGroupSharedFile"] = GroupManager_DownloadGroupSharedFile;
 	func_map_group_manager["getGroupAnnouncementFromServer"] = GroupManager_FetchGroupAnnouncement;
 	func_map_group_manager["getGroupBlockListFromServer"] = GroupManager_FetchGroupBans;
 	func_map_group_manager["getGroupMemberListFromServer"] = GroupManager_FetchGroupMembers;
+	func_map_group_manager["fetchGroupMemberInfoFromServer"] = GroupManager_FetchGroupMemberInfoFromServer;
 	func_map_group_manager["getGroupMuteListFromServer"] = GroupManager_FetchGroupMutes;
 	func_map_group_manager["getGroupFileListFromServer"] = GroupManager_FetchGroupSharedFiles;
 	func_map_group_manager["getGroupSpecificationFromServer"] = GroupManager_FetchGroupSpecification;
@@ -253,6 +259,7 @@ void InitManagerMap()
     func_map_conversation_manager["loadMsgWithMsgTypeList"] = ConversationManager_LoadMessagesWithMsgTypeList;
 	func_map_conversation_manager["loadMsgWithTime"] = ConversationManager_LoadMessagesWithTime;
     func_map_conversation_manager["loadMsgWithScope"] = ConversationManager_LoadMessagesWithScope;
+    func_map_conversation_manager["loadMsgWithScopeAndFromIds"] = ConversationManager_LoadMessagesWithScopeAndFromIds;
 	func_map_conversation_manager["markAllMessagesAsRead"] = ConversationManager_MarkAllMessagesAsRead;
 	func_map_conversation_manager["markMessageAsRead"] = ConversationManager_MarkMessageAsRead;
 	func_map_conversation_manager["syncConversationExt"] = ConversationManager_SetExtField;

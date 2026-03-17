@@ -28,4 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface EMGroupMemberInfo (Helper) <EaseModeToJson>
+- (NSDictionary *)toJson;
+
+@end
+
 NS_ASSUME_NONNULL_END

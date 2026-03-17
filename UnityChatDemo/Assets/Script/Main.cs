@@ -158,7 +158,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     void AccessTokenBtnAction()
     {
-        UIManager.DefaultAlert(transform, SDKClient.Instance.AccessToken);
+        string token = SDKClient.Instance.AccessToken;
+        UIManager.DefaultAlert(transform, token);
+        Debug.Log($"AccessToken is: {token}");
     }
 
     void LogoutBtnAction()
@@ -503,6 +505,15 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"GroupManager15 OnMemberExitedFromGroup groupId: {groupId}, member: {member}");
     }
 
+    public void OnMembersJoinedFromGroup(string groupId, List<string> members)
+    {
+        Debug.Log($"GroupManager15 OnMembersJoinedFromGroup groupId: {groupId}, members: {string.Join(", ", members.ToArray())}");
+    }
+
+    public void OnMembersExitedFromGroup(string groupId, List<string> members)
+    {
+        Debug.Log($"GroupManager15 OnMembersExitedFromGroup groupId: {groupId}, members: {string.Join(", ", members.ToArray())}");
+    }
     public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
     {
         Debug.Log($"GroupManager16 OnAnnouncementChangedFromGroup groupId: {groupId}, announcement: {announcement}");

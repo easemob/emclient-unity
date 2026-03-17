@@ -79,6 +79,9 @@
     else if ([loadMsgWithScope isEqualToString:method]) {
         ret = [self loadMsgWithScope:params callback:callback];
     }
+    else if ([loadMsgWithScopeAndFromIds isEqualToString:method]) {
+        ret = [self loadMsgWithScopeAndFromIds:params callback:callback];
+    }
     else if([messageCount isEqualToString:method]) {
         ret = [self messageCount:params callback:callback];
     }
@@ -335,6 +338,40 @@
                                  fromUser:sender
                           searchDirection:direction
                                    scope:scope
+                               completion:^(NSArray<EMChatMessage *> * _Nullable aMessages, EMError * _Nullable aError)
+    {
+        NSMutableArray *jsonMsgs = [NSMutableArray array];
+        for (EMChatMessage *msg in aMessages) {
+            [jsonMsgs addObject:[msg toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:aError object:jsonMsgs];
+    }];
+
+    return nil;
+}
+
+- (NSString *)loadMsgWithScopeAndFromIds:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+
+    __weak EMConversationWrapper * weakSelf = self;
+    EMConversation *conversation = [self conversationWithParam: params];
+    NSString * keywords = params[@"keywords"];
+    long long timestamp = [params[@"timestamp"] longLongValue];
+    int count = [params[@"count"] intValue];
+
+    NSArray<NSString*> *senders = nil;
+    if (params[@"fromIds"]) {
+        senders = params[@"fromIds"];
+    }
+
+    EMMessageSearchDirection direction = [params[@"direction"] intValue] == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+    EMMessageSearchScope scope = [Mode searchScopeFromInt:[params[@"scope"] intValue]];
+
+    [conversation loadMessagesWithKeyword:keywords
+                                timestamp:timestamp
+                                    count:count
+                                fromUsers:senders
+                          searchDirection:direction
+                                    scope:scope
                                completion:^(NSArray<EMChatMessage *> * _Nullable aMessages, EMError * _Nullable aError)
     {
         NSMutableArray *jsonMsgs = [NSMutableArray array];

@@ -272,6 +272,27 @@ namespace AgoraChat
             return ret;
         }
 
+        internal static Dictionary<string, List<string>> StringListDictionaryFromJsonObject(JSONNode jo)
+        {
+            Dictionary<string, List<string>> ret = new Dictionary<string, List<string>>();
+
+            if (!jo.IsObject) return ret;
+
+            foreach (string s in jo.Keys)
+            {
+                if (jo[s].IsArray)
+                {
+                    List<string> list = new List<string>();
+                    foreach (var it in jo[s].AsArray)
+                    {
+                        list.Add(it.Value);
+                    }
+                    ret.Add(s, list);
+                }
+            }
+            return ret;
+        }
+
         internal static Dictionary<string, string> StringDictionaryFromJsonObject(JSONNode jo)
         {
 

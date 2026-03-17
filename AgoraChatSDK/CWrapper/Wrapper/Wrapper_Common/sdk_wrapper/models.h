@@ -209,6 +209,8 @@ namespace sdk_wrapper {
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupList& list);
         static void ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, unordered_map<string, string>>& map);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMMucMemberInfoPtr mucMemberInfo);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMemberInfoList& list);
 
 		static string ToJson(const EMMucSettingPtr setting);
 		static EMMucSettingPtr FromJsonToMucSetting(string json);
@@ -244,6 +246,7 @@ namespace sdk_wrapper {
 		static string ToJson(string cursor, const EMMessageReactionPtr reaction);
 		static string ToJsonWithGroupInfo(string cursor, const EMCursorResult& result);
 		static string ToJson(string cursor, const EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+		static string ToJson(string cursor, const EMMucMemberInfoList& memberInfoList);
 
         template<typename ResultType, typename ConvertType>
         static string ToJson(string cursor, const vector<ResultType>& cusorResult)
