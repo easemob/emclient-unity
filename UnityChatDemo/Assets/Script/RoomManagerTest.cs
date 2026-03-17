@@ -523,6 +523,7 @@ public class RoomManagerTest : MonoBehaviour
 
             List<string> list = new List<string>();
             list.Add(member);
+            list.Add("yqtest2");
             SDKClient.Instance.RoomManager.MuteRoomMembers(currentRoomId, list, -1, new CallBack(
                 onSuccess: () =>
                 {
@@ -727,8 +728,8 @@ public class RoomManagerTest : MonoBehaviour
         }
 
         List<string> keys = new List<string>();
-        keys.Add("key1");
-        keys.Add("key2");
+        keys.Add("key");
+        //keys.Add("key2");
         SDKClient.Instance.RoomManager.RemoveAttributes(currentRoomId, keys, forced: true, callback: new ValueCallBack<Dictionary<string, int>>(
             onSuccess: (result) =>
             {

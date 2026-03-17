@@ -583,6 +583,9 @@
     ret.thumbnailSize = CGSizeMake([aJson[@"thumbnailWidth"] floatValue], [aJson[@"thumbnailHeight"] floatValue]);
     ret.thumbnailDownloadStatus = [ret downloadStatusFromInt:[aJson[@"thumbnailStatus"] intValue]];
     ret.compressionRatio = [aJson[@"sendOriginalImage"] boolValue] ? 1.0 : 0.6;
+    if (aJson[@"isGif"]) {
+        ret.isGif = [aJson[@"isGif"] boolValue];
+    }
     return ret;
 }
 
@@ -604,6 +607,7 @@
     bodyDict[@"displayName"] = self.displayName;
     bodyDict[@"localPath"] = self.localPath;
     bodyDict[@"sendOriginalImage"] = self.compressionRatio == 1.0 ? @(true) : @(false);
+    bodyDict[@"isGif"] = @(self.isGif);
     ret[@"body"] = bodyDict;
     ret[@"type"] = @(1);
     return ret;

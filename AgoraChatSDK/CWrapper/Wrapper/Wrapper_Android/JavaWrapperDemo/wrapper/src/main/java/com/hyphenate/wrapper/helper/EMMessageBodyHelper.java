@@ -215,6 +215,9 @@ public class EMMessageBodyHelper {
         if (json.has("sendOriginalImage")){
             body.setSendOriginalImage(json.getBoolean("sendOriginalImage"));
         }
+        if (json.has("isGif")){
+            body.setGif(json.getBoolean("isGif"));
+        }
 
         if (json.has("fileStatus")){
             body.setDownloadStatus(downloadStatusFromInt(json.getInt("fileStatus")));
@@ -242,6 +245,7 @@ public class EMMessageBodyHelper {
         data.put("height", body.getHeight());
         data.put("width", body.getWidth());
         data.put("sendOriginalImage", body.isSendOriginalImage());
+        data.put("isGif", body.isGif());
         data.put("fileSize", body.getFileSize());
         return data;
     }

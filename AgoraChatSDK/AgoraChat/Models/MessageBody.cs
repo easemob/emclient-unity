@@ -482,6 +482,19 @@ namespace AgoraChat
              */
             public bool Original;
 
+            /**
+             * \~chinese
+             * 是否为 GIF 图片。
+             * - `true`: 是 GIF 图片。
+             * - (默认）`false`: 不是 GIF 图片。
+             *
+             * \~english
+             * Whether the image is a GIF.
+             * - `true`: Yes, it is a GIF image.
+             * - (Default) `false`: No, it is not a GIF image.
+             */
+            public bool isGif = false;
+
 
             /**
              * \~chinese
@@ -546,6 +559,7 @@ namespace AgoraChat
                 jo_body.AddWithoutNull("thumbnailHeight", ThumbnailHeight);
                 jo_body.AddWithoutNull("thumbnailWidth", ThumbnailWidth);
                 jo_body.AddWithoutNull("sendOriginalImage", Original);
+                jo_body.AddWithoutNull("isGif", isGif);
 
                 return jo;
             }
@@ -562,6 +576,7 @@ namespace AgoraChat
                 ThumbnailHeight = jo["thumbnailHeight"].AsDouble;
                 ThumbnailWidth = jo["thumbnailWidth"].AsDouble;
                 Original = jo["sendOriginalImage"].AsBool;
+                isGif = jo["isGif"].AsBool;
             }
         }
 

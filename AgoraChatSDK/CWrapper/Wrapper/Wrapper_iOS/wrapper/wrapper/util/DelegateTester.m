@@ -134,6 +134,8 @@
     [EMClientWrapper.shared.groupManagerWrapper groupOwnerDidUpdate:_group newOwner:@"newOwner" oldOwner:@"oldOwner"];
     [EMClientWrapper.shared.groupManagerWrapper userDidJoinGroup:_group user:@"user"];
     [EMClientWrapper.shared.groupManagerWrapper userDidLeaveGroup:_group user:@"user"];
+    [EMClientWrapper.shared.groupManagerWrapper userDidJoinGroup:_group users:@[@"user1", @"user2"]];
+    [EMClientWrapper.shared.groupManagerWrapper userDidLeaveGroup:_group users:@[@"user1", @"user2"]];
     [EMClientWrapper.shared.groupManagerWrapper groupAnnouncementDidUpdate:_group announcement:@"announcement"];
     
     EMGroupSharedFile *file = [[EMGroupSharedFile alloc] init];

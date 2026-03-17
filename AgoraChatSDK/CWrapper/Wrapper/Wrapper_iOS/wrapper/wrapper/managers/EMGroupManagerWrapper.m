@@ -43,10 +43,14 @@
         ret = [self getPublicGroupsFromServer:params callback:callback];
     } else if ([createGroup isEqualToString:method]) {
         ret = [self createGroup:params callback:callback];
+    } else if ([createGroupWithAvatar isEqualToString:method]) {
+        ret = [self createGroupWithAvatar:params callback:callback];
     } else if ([getGroupSpecificationFromServer isEqualToString:method]) {
         ret = [self getGroupSpecificationFromServer:params callback:callback];
     } else if ([getGroupMemberListFromServer isEqualToString:method]) {
         ret = [self getGroupMemberListFromServer:params callback:callback];
+    } else if ([fetchGroupMemberInfoFromServer isEqualToString:method]) {
+        ret = [self fetchGroupMemberInfoFromServer:params callback:callback];
     } else if ([getGroupMuteListFromServer isEqualToString:method]) {
         ret = [self getGroupMuteListFromServer:params callback:callback];
     } else if ([getGroupWhiteListFromServer isEqualToString:method]) {
@@ -79,6 +83,8 @@
         ret = [self leaveGroup:params callback:callback];
     } else if ([destroyGroup isEqualToString:method]) {
         ret = [self destroyGroup:params callback:callback];
+    } else if ([updateGroupAvatar isEqualToString:method]) {
+        ret = [self updateGroupAvatar:params callback:callback];
     } else if ([blockGroup isEqualToString:method]) {
         ret = [self blockGroup:params callback:callback];
     } else if ([unblockGroup isEqualToString:method]) {
@@ -208,6 +214,21 @@
     return nil;
 }
 
+- (NSString *)createGroupWithAvatar:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager createGroupWithSubject:params[@"name"]
+                                                        avatar:params[@"avatar"]
+                                                   description:params[@"desc"]
+                                                      invitees:params[@"userIds"]
+                                                       message:params[@"msg"]
+                                                       setting:[EMGroupOptions formJson:params[@"options"]]
+                                                    completion:^(EMGroup *aGroup, EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[aGroup toJson]];
+    }];
+    return nil;
+}
+
 - (NSString *)getGroupSpecificationFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
     NSString *groupId = params[@"groupId"];
@@ -229,6 +250,18 @@
                                                                 completion:^(EMCursorResult *aResult, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aResult toJson]];
+    }];
+    return nil;
+}
+
+- (NSString *)fetchGroupMemberInfoFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager fetchGroupMemberInfoListFromServerWithGroupId:params[@"groupId"]
+                                                                               cursor:params[@"cursor"]
+                                                                                limit:[params[@"pageSize"] intValue]
+                                                                           completion:^(EMCursorResult<EMGroupMemberInfo *> * _Nullable cursorResult, EMError * _Nullable aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[cursorResult toJson]];
     }];
     return nil;
 }
@@ -416,6 +449,17 @@
     __weak EMGroupManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.groupManager destroyGroup:params[@"groupId"]
                                     finishCompletion:^(EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+    return nil;
+}
+
+- (NSString *)updateGroupAvatar:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager updateGroupAvatar:params[@"avatar"]
+                                                  groupId:params[@"groupId"]
+                                               completion:^(EMGroup *aGroup, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:nil];
     }];
@@ -947,6 +991,24 @@
     dictionary[@"groupId"] = aGroup.groupId;
     dictionary[@"userId"] = aUsername;
     [EMWrapperHelper.shared.listener onReceive:groupListener method:onMemberExitedFromGroup info: [dictionary toJsonString]];
+}
+
+- (void)userDidJoinGroup:(EMGroup *_Nonnull)group
+                   users:(NSArray<NSString*> *_Nonnull)userIds
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"groupId"] = group.groupId;
+    dictionary[@"userIds"] = userIds;
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onMembersJoinedFromGroup info: [dictionary toJsonString]];
+}
+
+- (void)userDidLeaveGroup:(EMGroup *_Nonnull)group
+                    users:(NSArray<NSString *>* _Nonnull)userIds
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"groupId"] = group.groupId;
+    dictionary[@"userIds"] = userIds;
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onMembersExitedFromGroup info: [dictionary toJsonString]];
 }
 
 - (void)groupAnnouncementDidUpdate:(EMGroup *_Nonnull)aGroup

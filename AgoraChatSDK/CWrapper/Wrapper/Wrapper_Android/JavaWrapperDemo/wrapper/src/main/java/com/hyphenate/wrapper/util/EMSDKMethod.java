@@ -99,6 +99,7 @@ public class EMSDKMethod {
     public static final String removeReaction = "removeReaction";
     public static final String fetchReactionList = "fetchReactionList";
     public static final String fetchReactionDetail = "fetchReactionDetail";
+    public static final String loadConversationMessagesWithKeyword = "loadConversationMessagesWithKeyword";
     public static final String reportMessage = "reportMessage";
 
     public static final String getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
@@ -107,11 +108,13 @@ public class EMSDKMethod {
 
     public static final String removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
     public static final String modifyMessage = "modifyMessage";
+    public static final String modifyMessageWithExt = "modifyMessageWithExt";
     public static final String downloadCombineMessages = "downloadCombineMessages";
     public static final String markConversations = "markConversations";
     public static final String deleteAllMessagesAndConversations = "deleteAllMessagesAndConversations";
     public static final String pinMessage = "pinMessage";
     public static final String getPinnedMessagesFromServer = "getPinnedMessagesFromServer";
+    public static final String loadMessages = "loadMessages";
 
 
     /// EMMessage listener
@@ -141,6 +144,7 @@ public class EMSDKMethod {
     public static final String loadMsgWithMsgTypeList = "loadMsgWithMsgTypeList";
     public static final String loadMsgWithTime = "loadMsgWithTime";
     public static final String loadMsgWithScope = "loadMsgWithScope";
+    public static final String loadMsgWithScopeAndFromIds = "loadMsgWithScopeAndFromIds";
     public static final String messageCount = "messageCount";
     public static final String messageCountWithTS = "messageCountWithTS";
     public static final String pinnedMessages = "pinnedMessages";
@@ -201,8 +205,10 @@ public class EMSDKMethod {
     public static final String getJoinedGroupsFromServerSimple = "getJoinedGroupsFromServerSimple";
     public static final String getPublicGroupsFromServer = "getPublicGroupsFromServer";
     public static final String createGroup = "createGroup";
+    public static final String createGroupWithAvatar = "createGroupWithAvatar";
     public static final String getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
     public static final String getGroupMemberListFromServer = "getGroupMemberListFromServer";
+    public static final String fetchGroupMemberInfoFromServer = "fetchGroupMemberInfoFromServer";
     public static final String getGroupBlockListFromServer = "getGroupBlockListFromServer";
     public static final String getGroupMuteListFromServer = "getGroupMuteListFromServer";
     public static final String getGroupWhiteListFromServer = "getGroupWhiteListFromServer";
@@ -219,6 +225,7 @@ public class EMSDKMethod {
     public static final String updateDescription = "updateDescription";
     public static final String leaveGroup = "leaveGroup";
     public static final String destroyGroup = "destroyGroup";
+    public static final String updateGroupAvatar = "updateGroupAvatar";
     public static final String blockGroup = "blockGroup";
     public static final String unblockGroup = "unblockGroup";
     public static final String updateGroupOwner = "updateGroupOwner";
@@ -395,6 +402,8 @@ public class EMSDKMethod {
     public static final String onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
     public static final String onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
     public static final String onMemberExitedFromGroup = "onMemberExitedFromGroup";
+    public static final String onMembersJoinedFromGroup = "onMembersJoinedFromGroup";
+    public static final String onMembersExitedFromGroup = "onMembersExitedFromGroup";
     public static final String onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
     public static final String onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
     public static final String onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";

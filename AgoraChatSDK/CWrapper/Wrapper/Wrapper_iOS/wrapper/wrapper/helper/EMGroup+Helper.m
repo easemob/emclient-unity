@@ -34,6 +34,8 @@
         ret[@"isMemberAllowToInvite"] = @([self isMemberAllowToInvite]);
         ret[@"ext"] = self.settings.ext;
     }
+
+    ret[@"avatar"] = self.groupAvatar;
     
     return ret;
 }
@@ -196,6 +198,18 @@
     data[@"owner"] = self.fileOwner;
     data[@"createTime"] = @(self.createdAt);
     data[@"fileSize"] = @(self.fileSize);
+    return data;
+}
+
+@end
+
+
+@implementation EMGroupMemberInfo (Helper)
+- (NSDictionary *)toJson {
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    data[@"memberId"] = self.userId;
+    data[@"joinedTimestamp"] = @(self.joinedTimestamp);
+    data[@"role"] = @([EMGroup premissionTypeToInt:self.role]);
     return data;
 }
 

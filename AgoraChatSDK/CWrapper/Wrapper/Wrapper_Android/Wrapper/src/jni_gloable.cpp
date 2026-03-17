@@ -32,13 +32,13 @@ namespace wrapper_jni {
 
     jstring getJStringObject(JNIEnv *env, const string &str) {
         jclass clazz = (*env).FindClass("java/lang/String");
-        jbyteArray jArray = getJByteArray(env, (byte*)str.c_str(), str.length());
+        jbyteArray jArray = getJByteArray(env, (charbyte*)str.c_str(), str.length());
         jstring jstr = (jstring)(*env).NewObject(clazz, (*env).GetMethodID(clazz, "<init>", "([B)V"), jArray);
         (*env).DeleteLocalRef(jArray);
         return jstr;
     }
 
-    jbyteArray getJByteArray(JNIEnv *env, const byte *str, unsigned int len) {
+    jbyteArray getJByteArray(JNIEnv *env, const charbyte *str, unsigned int len) {
         jbyteArray jArray = env->NewByteArray(len);
         env->SetByteArrayRegion(jArray, 0, len, reinterpret_cast<const jbyte*>(str));
         return jArray;

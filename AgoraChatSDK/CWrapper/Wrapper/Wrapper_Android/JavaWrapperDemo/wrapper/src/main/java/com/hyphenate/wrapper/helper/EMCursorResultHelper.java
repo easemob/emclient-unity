@@ -6,6 +6,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
+import com.hyphenate.chat.EMGroupMemberInfo;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessageReaction;
@@ -48,6 +49,10 @@ public class EMCursorResultHelper {
 
                 if (obj instanceof EMGroupInfo) {
                     jsonList.put(EMGroupInfoHelper.toJson((EMGroupInfo) obj));
+                }
+
+                if (obj instanceof EMGroupMemberInfo) {
+                    jsonList.put(EMGroupMemberInfoHelper.toJson((EMGroupMemberInfo) obj));
                 }
 
                 if (obj instanceof EMMessageReaction) {

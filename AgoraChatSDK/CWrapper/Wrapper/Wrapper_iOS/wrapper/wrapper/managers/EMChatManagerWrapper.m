@@ -104,6 +104,8 @@
         ret = [self fetchReactionList:params callback:callback];
     }else if([method isEqualToString:fetchReactionDetail]) {
         ret = [self fetchReactionDetail:params callback:callback];
+    }else if([method isEqualToString:loadConversationMessagesWithKeyword]) {
+        ret = [self loadConversationMessagesWithKeyword:params callback:callback];
     }else if([method isEqualToString:reportMessage]) {
         ret = [self reportMessage:params callback:callback];
     }else if([method isEqualToString:fetchConversationsFromServerWithPage]) {
@@ -118,6 +120,8 @@
         ret = [self pinConversation:params callback:callback];
     }else if ([method isEqualToString:modifyMessage]) {
         ret = [self modifyMessage:params callback:callback];
+    }else if ([method isEqualToString:modifyMessageWithExt]) {
+        ret = [self modifyMessageWithExt:params callback:callback];
     }else if ([method isEqualToString:downloadCombineMessages]) {
         ret = [self downloadCombineMessages:params callback:callback];
     }else if ([method isEqualToString:getConversationsFromServerWithCursorAndMark]) {
@@ -130,6 +134,8 @@
         ret = [self pinMessage:params callback:callback];
     }else if ([method isEqualToString:getPinnedMessagesFromServer]) {
         ret = [self getPinnedMessagesFromServer:params callback:callback];
+    }else if ([method isEqualToString:loadMessages]) {
+        ret = [self loadMessages:params callback:callback];
     }
     else {
         ret = [super onMethodCall:method params:params callback:callback];
@@ -715,6 +721,31 @@
     return nil;
 }
 
+- (NSString *)loadConversationMessagesWithKeyword:(NSDictionary *)param
+                                         callback:(EMWrapperCallback *)callback {
+    NSString *keywords = param[@"keywords"];
+    long long timestamp = [param[@"timestamp"] longLongValue];
+    NSString *from = param[@"from"];
+    int directionInt = [param[@"direction"] intValue];
+    int scopeInt = [param[@"scope"] intValue];
+
+    EMMessageSearchDirection direction = directionInt == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+    EMMessageSearchScope scope = (EMMessageSearchScope)scopeInt;
+
+    __weak EMChatManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.chatManager loadConversationMessagesWithKeyword:keywords
+                                                                 timestamp:timestamp
+                                                                  fromUser:from
+                                                           searchDirection:direction
+                                                                     scope:scope
+                                                                completion:^(NSDictionary<NSString *,NSArray<NSString *> *> * _Nullable aConversationMessages, EMError * _Nullable aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:aConversationMessages];
+    }];
+
+    return nil;
+}
+
 - (NSString *)fetchReactionDetail:(NSDictionary *)param
                          callback:(EMWrapperCallback *)callback {
     NSString *msgId = param[@"msgId"];
@@ -838,6 +869,70 @@
         
     }];
     
+    return nil;
+}
+
+- (NSString *)modifyMessageWithExt:(NSDictionary *)params
+                          callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+    NSString *msgId = params[@"msgId"];
+
+    EMMessageBody *body = nil;
+    if (params[@"body"] != nil && params[@"body"] != [NSNull null]) {
+        NSDictionary *bodyDict = params[@"body"];
+        body = [EMTextMessageBody fromJson:bodyDict[@"body"]];
+    }
+
+    NSDictionary *ext = nil;
+    if (params[@"attributes"] != nil && params[@"attributes"] != [NSNull null]) {
+        NSDictionary *attributesDict = params[@"attributes"];
+        NSMutableDictionary *extDict = [NSMutableDictionary dictionary];
+
+        for (NSString *key in attributesDict.allKeys) {
+            id valueObj = attributesDict[key];
+            if (![valueObj isKindOfClass:[NSDictionary class]]) {
+                continue;
+            }
+
+            NSDictionary *valueDict = (NSDictionary *)valueObj;
+            NSString *type = valueDict[@"type"];
+            NSString *value = valueDict[@"value"];
+
+            if (![type isKindOfClass:[NSString class]] || ![value isKindOfClass:[NSString class]]) {
+                continue;
+            }
+
+            if ([type isEqualToString:@"b"]) {
+                extDict[key] = @([value boolValue]);
+            } else if ([type isEqualToString:@"i"]) {
+                extDict[key] = @([value intValue]);
+            } else if ([type isEqualToString:@"l"]) {
+                extDict[key] = @([value longLongValue]);
+            } else if ([type isEqualToString:@"f"]) {
+                extDict[key] = @([value floatValue]);
+            } else if ([type isEqualToString:@"d"]) {
+                extDict[key] = @([value doubleValue]);
+            } else if ([type isEqualToString:@"str"] || [type isEqualToString:@"jstr"]) {
+                extDict[key] = value;
+            }
+        }
+
+        ext = extDict;
+    }
+
+    [EMClient.sharedClient.chatManager modifyMessage:msgId
+                                                body:body
+                                                 ext:ext
+                                          completion:^(EMError * _Nullable error, EMChatMessage * _Nullable message)
+     {
+        if (error) {
+            [weakSelf wrapperCallback:callback error:error object:nil];
+        }else {
+            [weakSelf wrapperCallback:callback error:nil object:message.toJson];
+        }
+
+    }];
+
     return nil;
 }
 
@@ -1013,6 +1108,25 @@
             [jsonMsgs addObject:[msg toJson]];
         }
         [weakSelf wrapperCallback:callback error:error object:jsonMsgs];
+    }];
+
+    return nil;
+}
+
+- (NSString *)loadMessages:(NSDictionary *)param
+                  callback:(EMWrapperCallback *)callback {
+    NSArray *msgIds = param[@"msgIds"];
+    NSString *convId = param[@"convId"];
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    [EMClient.sharedClient.chatManager getMessages:msgIds
+                                 withConversationId:convId
+                                         completion:^(NSArray<EMChatMessage *> * _Nullable aMessages, EMError * _Nullable aError) {
+        NSMutableArray *jsonMsgs = [NSMutableArray array];
+        for (EMChatMessage *msg in aMessages) {
+            [jsonMsgs addObject:[msg toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:aError object:jsonMsgs];
     }];
 
     return nil;

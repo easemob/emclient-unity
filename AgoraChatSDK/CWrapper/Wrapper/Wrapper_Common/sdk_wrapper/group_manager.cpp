@@ -485,6 +485,39 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_CreateGroupWithAvatar(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string group_name = GetJsonValue_String(d, "name", "");
+        string avatar = GetJsonValue_String(d, "avatar", "");
+        string desc = GetJsonValue_String(d, "desc", "");
+        string invite_reason = GetJsonValue_String(d, "msg", "");
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
+        EMMucSetting setting = *(Group::JsonObjectToMucSetting(d["options"]).get());
+
+        thread t([=]() {
+            EMError error;
+            EMGroupPtr result = CLIENT->getGroupManager().createGroup(group_name, desc, invite_reason, setting, mem_list, error, avatar);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = Group::ToJson(result);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DeclineInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -556,6 +589,35 @@ namespace sdk_wrapper {
         thread t([=]() {
             EMError error;
             CLIENT->getGroupManager().destroyGroup(group_id, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+         });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UpdateGroupAvatar(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string group_id = GetJsonValue_String(d, "groupId", "");
+        string avatar = GetJsonValue_String(d, "avatar", "");
+
+        thread t([=]() {
+            EMError error;
+            EMGroupPtr result = CLIENT->getGroupManager().changeGroupAvatar(group_id, avatar, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
@@ -736,6 +798,38 @@ namespace sdk_wrapper {
 
                 string next_cursor = msgCursorResult.nextPageCursor();
                 string json = CursorResult::ToJson(next_cursor, msgCursorResult.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupMemberInfoFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string group_id = GetJsonValue_String(d, "groupId", "");
+        string cursor = GetJsonValue_String(d, "cursor", "");
+        int page_size = GetJsonValue_Int(d, "pageSize", 20);
+
+        thread t([=]() {
+            EMError error;
+            EMCursorResultRaw<EMMucMemberInfo> memberInfoCursorResult = CLIENT->getGroupManager().fetchGroupMemberInfoList(group_id, cursor, page_size, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string next_cursor = memberInfoCursorResult.nextPageCursor();
+                string json = CursorResult::ToJson(next_cursor, memberInfoCursorResult.result());
                 string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
@@ -1554,6 +1648,8 @@ namespace sdk_wrapper {
             gGroupManagerListener->onAssignOwnerFromGroup(groupPtr, "newOwner", "oldOwner");
             gGroupManagerListener->onMemberJoinedGroup(groupPtr, "join_member");
             gGroupManagerListener->onMemberLeftGroup(groupPtr, "left_member");
+            gGroupManagerListener->onMembersJoinedGroup(groupPtr, members);
+            gGroupManagerListener->onMembersLeftGroup(groupPtr, members);
             gGroupManagerListener->onUpdateAnnouncementFromGroup(groupPtr, "updated announcement");
 
             EMMucSharedFilePtr shared_file(new EMMucSharedFile("fileId", "fileName", "fileOwner", 12345, 67890));

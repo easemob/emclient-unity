@@ -281,6 +281,15 @@ namespace AgoraChat
          */
         public string Ext { get; internal set; }
 
+        /**
+         * \~chinese
+         * 群组头像的 URL。
+         *
+         * \~english
+         * The URL of the group avatar.
+         */
+        public string Avatar { get; internal set; }
+
         [Preserve]
         internal Group() { }
 
@@ -311,6 +320,7 @@ namespace AgoraChat
             Ext = jsonObject["ext"];
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
             IsDisabled = jsonObject["isDisabled"].AsBool;
+            Avatar = jsonObject["avatar"];
         }
 
         internal override JSONObject ToJsonObject()
@@ -329,6 +339,7 @@ namespace AgoraChat
             jo.AddWithoutNull("block", MessageBlocked);
             jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
+            jo.AddWithoutNull("avatar", Avatar);
             // jo.AddWithoutNull("options", Options.ToJsonObject());
             // jo.AddWithoutNull("isDisabled", IsDisabled);
             return jo;

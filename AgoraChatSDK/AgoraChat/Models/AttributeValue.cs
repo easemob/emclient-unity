@@ -243,23 +243,58 @@ namespace AgoraChat
             {
                 case "b":
                     VType = AttributeValueType.BOOL;
-                    BoolV = bool.Parse(value);
+                    if (jvalue != null && jvalue.IsBoolean)
+                    {
+                        BoolV = jvalue.AsBool;
+                    }
+                    else if (!string.IsNullOrEmpty(value))
+                    {
+                        BoolV = bool.Parse(value);
+                    }
                     break;
                 case "i":
                     VType = AttributeValueType.INT32;
-                    Int32V = int.Parse(value);
+                    if (jvalue != null && jvalue.IsNumber)
+                    {
+                        Int32V = jvalue.AsInt;
+                    }
+                    else if (!string.IsNullOrEmpty(value))
+                    {
+                        Int32V = int.Parse(value);
+                    }
                     break;
                 case "l":
                     VType = AttributeValueType.INT64;
-                    Int64V = long.Parse(value);
+                    if (jvalue != null && jvalue.IsNumber)
+                    {
+                        Int64V = (long)jvalue.AsDouble;
+                    }
+                    else if (!string.IsNullOrEmpty(value))
+                    {
+                        Int64V = long.Parse(value);
+                    }
                     break;
                 case "f":
                     VType = AttributeValueType.FLOAT;
-                    FloatV = float.Parse(value);
+                    if (jvalue != null && jvalue.IsNumber)
+                    {
+                        FloatV = jvalue.AsFloat;
+                    }
+                    else if (!string.IsNullOrEmpty(value))
+                    {
+                        FloatV = float.Parse(value);
+                    }
                     break;
                 case "d":
                     VType = AttributeValueType.DOUBLE;
-                    DoubleV = double.Parse(value);
+                    if (jvalue != null && jvalue.IsNumber)
+                    {
+                        DoubleV = jvalue.AsDouble;
+                    }
+                    else if (!string.IsNullOrEmpty(value))
+                    {
+                        DoubleV = double.Parse(value);
+                    }
                     break;
                 case "str":
                     VType = AttributeValueType.STRING;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AgoraChat
 {
@@ -290,6 +291,7 @@ namespace AgoraChat
 		 * @param groupId  The group ID.
 		 * @param member   The ID of the new member.
 		 */
+		[Obsolete("Use OnMembersJoinedFromGroup instead.")]
         void OnMemberJoinedFromGroup(string groupId, string member);
 
         /**
@@ -305,7 +307,38 @@ namespace AgoraChat
 		 * @param groupId   The group ID.
 		 * @param member  	The user ID of the member who has left the group.
 		 */
+		[Obsolete("Use OnMembersExitedFromGroup instead.")]
         void OnMemberExitedFromGroup(string groupId, string member);
+
+        /**
+		 * \~chinese
+		 * 批量用户加入群组回调。
+		 *
+		 * @param groupId   	群组 ID。
+		 * @param members   加入群组的用户名列表。
+		 *
+		 * \~english
+		 * Occurs when users join a group.
+		 *
+		 * @param groupId       The group ID.
+		 * @param members   The users that join the group.
+		 */
+        void OnMembersJoinedFromGroup(string groupId, List<string> members);
+
+        /**
+		 * \~chinese
+		 * 批量用户离开群组回调。
+		 *
+		 * @param groupId       群组 ID。
+		 * @param members    离开群组的用户名列表。
+		 *
+		 * \~english
+		 * Occurs when users leave the group.
+		 *
+		 * @param groupId       The group ID.
+		 * @param members    The users that leave the group.
+		 */
+        void OnMembersExitedFromGroup(string groupId, List<string> members);
 
         /**
 		 * \~chinese

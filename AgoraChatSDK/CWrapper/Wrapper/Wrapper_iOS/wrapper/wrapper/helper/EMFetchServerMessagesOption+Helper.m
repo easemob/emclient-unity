@@ -14,6 +14,7 @@
     options.startTime = [dict[@"startTime"] longValue];
     options.endTime = [dict[@"endTime"] longValue];
     options.from = dict[@"from"];
+    options.fromIds = dict[@"fromIds"];
     options.isSave = [dict[@"isSave"] boolValue];
     NSArray *types = dict[@"types"];
     NSMutableArray<NSNumber*> *list = [NSMutableArray new];
