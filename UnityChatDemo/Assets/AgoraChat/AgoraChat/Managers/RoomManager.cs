@@ -1011,7 +1011,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("roomId", roomId);
             Process process = (_, jsonNode) =>
             {
-                return jsonNode.IsBoolean ? jsonNode.AsBool : false;
+                return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
             };
 
             NativeCall<bool>(SDKMethod.isMemberInChatRoomAllowListFromServer, jo_param, callback, process);
