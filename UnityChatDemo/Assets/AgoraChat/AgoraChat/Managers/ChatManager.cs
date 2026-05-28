@@ -1307,7 +1307,7 @@ namespace AgoraChat
         * @param scope         The message search scope. See {@link MessageSearchScope}.
         * @param callback      The result callback, which contains the conversation IDs and corresponding message ID lists.
         */
-        public void LoadConversationMessagesWithKeyword(string keywords, long timestamp = 0, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<Dictionary<string, List<string>>> callback = null)
+        public void LoadConversationMessagesWithKeyword(string keywords, long timestamp = -1, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<Dictionary<string, List<string>>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("keywords", keywords);
