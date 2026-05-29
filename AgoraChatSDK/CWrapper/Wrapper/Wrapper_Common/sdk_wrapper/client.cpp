@@ -216,6 +216,13 @@ namespace sdk_wrapper
 
         string app_key = GetJsonValue_String(d, "appKey", "");
 
+        if (!CheckAppKey(app_key.c_str())) {
+            EMErrorPtr result(new EMError(EMError::INVALID_PARAM));
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            return nullptr;
+        }
+
         thread t([=]() {
             EMErrorPtr result = CLIENT->changeAppkey(app_key);
 
@@ -248,6 +255,13 @@ namespace sdk_wrapper
         Document d; d.Parse(local_jstr.c_str());
 
         string app_id = GetJsonValue_String(d, "appId", "");
+
+        if (app_id.length() == 0) {
+            EMErrorPtr result(new EMError(EMError::INVALID_PARAM));
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            return nullptr;
+        }
 
         thread t([=]() {
             EMErrorPtr result = CLIENT->changeAppId(app_id);
@@ -897,5 +911,3 @@ namespace sdk_wrapper
         }
     }
 }
-
-
