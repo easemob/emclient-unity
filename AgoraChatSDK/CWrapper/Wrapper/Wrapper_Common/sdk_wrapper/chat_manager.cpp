@@ -9,6 +9,7 @@
 #include "tool.h"
 #include "callbacks.h"
 #include "sdk_wrapper.h"
+#include "models.h"
 
 extern EMClient* gClient;
 
@@ -1614,11 +1615,7 @@ namespace sdk_wrapper {
 
         string extJsonStr;
         if (d.HasMember("attributes") && d["attributes"].IsObject()) {
-            // 将attributes转换为JSON字符串
-            StringBuffer buffer;
-            Writer<StringBuffer> writer(buffer);
-            d["attributes"].Accept(writer);
-            extJsonStr = buffer.GetString();
+            extJsonStr = AttributesValue::ExtFromJson(d["attributes"]);
         }
 
         thread t([=]() {
@@ -1918,4 +1915,3 @@ namespace sdk_wrapper {
         return nullptr;
     }
 }
-

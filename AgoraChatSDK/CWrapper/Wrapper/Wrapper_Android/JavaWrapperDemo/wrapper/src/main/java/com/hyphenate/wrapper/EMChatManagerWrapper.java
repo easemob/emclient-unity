@@ -993,37 +993,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
 
         Map<String, Object> ext = null;
         if (params.has("attributes")) {
-            JSONObject attributesJson = params.optJSONObject("attributes");
-            ext = new java.util.HashMap<>();
-            java.util.Iterator<String> keys = attributesJson.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                JSONObject valueObj = attributesJson.optJSONObject(key);
-                if (valueObj != null) {
-                    String type = valueObj.optString("type");
-                    String value = valueObj.optString("value");
-
-                    try {
-                        // 根据类型转换value
-                        if ("b".equals(type)) {
-                            ext.put(key, Boolean.parseBoolean(value));
-                        } else if ("i".equals(type)) {
-                            ext.put(key, Integer.parseInt(value));
-                        } else if ("l".equals(type)) {
-                            ext.put(key, Long.parseLong(value));
-                        } else if ("f".equals(type)) {
-                            ext.put(key, Float.parseFloat(value));
-                        } else if ("d".equals(type)) {
-                            ext.put(key, Double.parseDouble(value));
-                        } else if ("str".equals(type) || "jstr".equals(type)) {
-                            ext.put(key, value);
-                        }
-                    } catch (NumberFormatException e) {
-                        // 数值解析失败，跳过该字段
-                        e.printStackTrace();
-                    }
-                }
-            }
+            ext = EMMessageHelper.extFromJson(params.optJSONObject("attributes"));
         }
 
         EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, ext, new EMCommonValueCallback<EMMessage>(callback) {

@@ -885,39 +885,7 @@
 
     NSDictionary *ext = nil;
     if (params[@"attributes"] != nil && params[@"attributes"] != [NSNull null]) {
-        NSDictionary *attributesDict = params[@"attributes"];
-        NSMutableDictionary *extDict = [NSMutableDictionary dictionary];
-
-        for (NSString *key in attributesDict.allKeys) {
-            id valueObj = attributesDict[key];
-            if (![valueObj isKindOfClass:[NSDictionary class]]) {
-                continue;
-            }
-
-            NSDictionary *valueDict = (NSDictionary *)valueObj;
-            NSString *type = valueDict[@"type"];
-            NSString *value = valueDict[@"value"];
-
-            if (![type isKindOfClass:[NSString class]] || ![value isKindOfClass:[NSString class]]) {
-                continue;
-            }
-
-            if ([type isEqualToString:@"b"]) {
-                extDict[key] = @([value boolValue]);
-            } else if ([type isEqualToString:@"i"]) {
-                extDict[key] = @([value intValue]);
-            } else if ([type isEqualToString:@"l"]) {
-                extDict[key] = @([value longLongValue]);
-            } else if ([type isEqualToString:@"f"]) {
-                extDict[key] = @([value floatValue]);
-            } else if ([type isEqualToString:@"d"]) {
-                extDict[key] = @([value doubleValue]);
-            } else if ([type isEqualToString:@"str"] || [type isEqualToString:@"jstr"]) {
-                extDict[key] = value;
-            }
-        }
-
-        ext = extDict;
+        ext = [EMChatMessage extFromJson:params[@"attributes"]];
     }
 
     [EMClient.sharedClient.chatManager modifyMessage:msgId

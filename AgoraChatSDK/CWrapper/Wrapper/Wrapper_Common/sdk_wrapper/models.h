@@ -128,6 +128,7 @@ namespace sdk_wrapper {
 		static void SetMessageAttr(EMMessagePtr msg, string& key, const Value& jnode);
 		static void SetMessageAttrs(EMMessagePtr msg, const Value& jnode);
 		static void SetMessageAttrs(EMMessagePtr msg, string json);
+		static string ExtFromJson(const Value& jnode);
 	};
 
 	class Conversation
