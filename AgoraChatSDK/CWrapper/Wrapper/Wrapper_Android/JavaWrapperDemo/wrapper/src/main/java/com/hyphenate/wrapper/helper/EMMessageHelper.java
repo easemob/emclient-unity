@@ -188,10 +188,30 @@ public class EMMessageHelper {
         if(json.has("attr")){
             Map<String, Object> ext = extFromJson(json.getJSONObject("attr"));
             for (Map.Entry<String, Object> entry : ext.entrySet()) {
-                message.setAttribute(entry.getKey(), entry.getValue());
+                setMessageAttribute(message, entry.getKey(), entry.getValue());
             }
         }
         return message;
+    }
+
+    private static void setMessageAttribute(EMMessage message, String key, Object value) {
+        if (value instanceof Boolean) {
+            message.setAttribute(key, (Boolean) value);
+        } else if (value instanceof Integer) {
+            message.setAttribute(key, (Integer) value);
+        } else if (value instanceof Long) {
+            message.setAttribute(key, (Long) value);
+        } else if (value instanceof Float) {
+            message.setAttribute(key, (Float) value);
+        } else if (value instanceof Double) {
+            message.setAttribute(key, (Double) value);
+        } else if (value instanceof JSONObject) {
+            message.setAttribute(key, (JSONObject) value);
+        } else if (value instanceof JSONArray) {
+            message.setAttribute(key, (JSONArray) value);
+        } else if (value instanceof String) {
+            message.setAttribute(key, (String) value);
+        }
     }
 
     public static Map<String, Object> extFromJson(JSONObject data) throws JSONException {
