@@ -51,6 +51,10 @@
     else
         options = [EMOptions optionsWithAppId:aJson[@"appId"]];
 
+#if defined(USE_AGORACHAT_DOMAIN)
+    options.useAgoraChatDomain = true;
+#endif
+
     options.platform = EMSDKPlatformUnity;  // Unity platform = 3
 
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];

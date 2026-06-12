@@ -5,6 +5,7 @@ import android.content.Context;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMOptions.EMSDKPlatform;
 import com.hyphenate.push.EMPushConfig;
+import com.hyphenate.wrapper.BuildConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,9 @@ public class EMOptionsHelper {
         EMOptions options = new EMOptions();
         options.setAppKey(json.getString("appKey"));
         options.setAppId(json.getString("appId"));
+        if (BuildConfig.UseAgoraChatDomain) {
+            options.setUseAgoraChatDomain(true);
+        }
 
         options.setSDKPlatform(EMSDKPlatform.EMSDKPlatformUnity);
 
