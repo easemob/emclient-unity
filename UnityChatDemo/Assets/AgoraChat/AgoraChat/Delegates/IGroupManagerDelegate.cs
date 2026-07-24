@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AgoraChat
 {
@@ -290,6 +291,7 @@ namespace AgoraChat
 		 * @param groupId  The group ID.
 		 * @param member   The ID of the new member.
 		 */
+		[Obsolete("Use OnMembersJoinedFromGroup instead.")]
         void OnMemberJoinedFromGroup(string groupId, string member);
 
         /**
@@ -305,6 +307,7 @@ namespace AgoraChat
 		 * @param groupId   The group ID.
 		 * @param member  	The user ID of the member who has left the group.
 		 */
+		[Obsolete("Use OnMembersExitedFromGroup instead.")]
         void OnMemberExitedFromGroup(string groupId, string member);
 
         /**

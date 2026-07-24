@@ -440,7 +440,7 @@ namespace AgoraChat
          * SDK 首先在内存中查找消息，若在内存中未找到，SDK 会在本地数据库查询并加载。
          *
          * @param startMessageId    加载的起始消息 ID。若该参数设置为 "" 或者 `null`，将从最近的消息开始加载。
-         * @param count             加载的最大消息数目。默认值为 `20`。
+         * @param count             加载的最大消息数目。默认值为 `20`，取值范围为 [1,400]。
          * @param direction         消息加载方向。默认按消息中的时间戳（{@link SortMessageByServerTime}）的倒序加载，详见 {@link MessageSearchDirection}。
          * @param callback            加载结果回调，成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
          *
@@ -450,7 +450,7 @@ namespace AgoraChat
          * The SDK first retrieves the messages from the memory. If no message is found, the SDK will retrieve them from the local database and load them.
          *
          * @param startMessageId    The starting message ID for loading. If this parameter is set as "" or `null`, the SDK will load from the latest message.
-         * @param count             The maximum number of messages to load. The default value is `20`.
+         * @param count             The maximum number of messages to load. The default value is `20`, the valid range is [1, 400].
            @param direction         The message loading direction. By default, the SDK loads messages in the reverse chronological order of the Unix timestamp ({@link SortMessageByServerTime}) in the messages. See {@link MessageSearchDirection}.
          * @param callback          The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
