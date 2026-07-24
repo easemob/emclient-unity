@@ -477,6 +477,78 @@ string execCommand(const char* cmd) {
     return result;
 }
 
+string execCommandHidden(const char* cmd) {
+    string output = "";
+    HANDLE hPipeRead = NULL;
+    HANDLE hPipeWrite = NULL;
+
+    // Sets the security attribute to allow the pipe handle to be inherited by child processes.
+    SECURITY_ATTRIBUTES saAttr;
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+    // Create an anonymous pipe to read the output of the child process.
+    if (!CreatePipe(&hPipeRead, &hPipeWrite, &saAttr, 0)) {
+        return "";
+    }
+
+    // Set startup information
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    si.hStdError = hPipeWrite;   // Redirect standard error to the pipe
+    si.hStdOutput = hPipeWrite;  // Redirect standard output to the pipe
+    si.dwFlags |= STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW; // Key: Use standard handles and window display settings.
+    si.wShowWindow = SW_HIDE;    // Key: Hide the window.
+
+    ZeroMemory(&pi, sizeof(pi));
+
+    // The second parameter of CreateProcessA requires a writable string; perform the conversion here
+    string cmdStr = cmd;
+    vector<char> cmdBuffer(cmdStr.begin(), cmdStr.end());
+    cmdBuffer.push_back('\0');
+
+    // Create the process
+    BOOL success = CreateProcessA(
+        NULL,
+        cmdBuffer.data(),
+        NULL, NULL, TRUE,
+        0, // No new console needs to be created
+        NULL, NULL,
+        &si, &pi
+    );
+
+    if (success) {
+        // Close the parent's write pipe to prevent the child process from hanging due to missing EOF.
+        CloseHandle(hPipeWrite);
+        hPipeWrite = NULL;
+
+        // Read the output from the child process
+        char buffer[128];
+        DWORD bytesRead;
+        while (ReadFile(hPipeRead, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+            buffer[bytesRead] = '\0';
+            output += buffer;
+        }
+
+        // Wait for the process to finish
+        WaitForSingleObject(pi.hProcess, INFINITE);
+
+        // Clean up process and thread handles.
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+    }
+
+    // Clean up the pipe handles
+    if (hPipeRead) CloseHandle(hPipeRead);
+    if (hPipeWrite) CloseHandle(hPipeWrite);
+
+    return output;
+}
+
+
 // Helper function to replace all slashes in a string
 string replaceAllSlash(const string& str) {
     string result = str;
@@ -500,7 +572,7 @@ string getWindowsVersion() {
     string version;
     try {
         string command = "wmic os get version";
-        string output = execCommand(command.c_str());
+        string output = execCommandHidden(command.c_str());
 
         // Parse the output
         istringstream iss(output);
@@ -526,7 +598,7 @@ string GetWinDid(bool infoOnly) {
     try {
         // Execute the wmic command to get the required information
         string command = "wmic computersystem get Manufacturer,Model,SystemType /format:csv";
-        string output = execCommand(command.c_str());
+        string output = execCommandHidden(command.c_str());
 
         // Parse the output
         istringstream iss(output);

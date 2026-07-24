@@ -928,16 +928,16 @@ namespace AgoraChat
          *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Removes members from the block list.
+         * Removes members from the allow list.
          * 
          * Only the chat room owner or admin can call this method.
          * 
-         * When members are removed from the block list, a call to the method {@link #MuteAllMembers(String, EMValueCallBack)} will also mute them.
+         * When members are removed from the allow list, a call to the method {@link #MuteAllMembers(String, EMValueCallBack)} will also mute them.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param members       The list of members to be removed from the block list.
+         * @param members       The list of members to be removed from the allow list.
          * @param callback        The completion callback. 
          *                      - If this call succeeds, the SDK calls {@link ValueCallBack#onSuccess(Object)};
          *                      - If this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
@@ -1011,7 +1011,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("roomId", roomId);
             Process process = (_, jsonNode) =>
             {
-                return jsonNode.IsBoolean ? jsonNode.AsBool : false;
+                return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
             };
 
             NativeCall<bool>(SDKMethod.isMemberInChatRoomAllowListFromServer, jo_param, callback, process);
