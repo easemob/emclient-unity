@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -185,49 +186,67 @@ public class EMMessageHelper {
         }
 
         if(json.has("attr")){
-            JSONObject data = json.getJSONObject("attr");
-            Iterator iterator = data.keys();
-            while (iterator.hasNext()) {
-                String key = iterator.next().toString();
-                JSONObject result = data.getJSONObject(key);
-                String valueType = result.getString("type");
-                String value = result.getString("value");
-                if (valueType.equals("b")) {
-                    if (value.equalsIgnoreCase("false")) {
-                        message.setAttribute(key, false);
-                    } else {
-                        message.setAttribute(key, true);
-                    }
-                } else if (valueType.equals("l")) {
-                    message.setAttribute(key, Long.valueOf(value));
-                } else if (valueType.equals("f")) {
-                    message.setAttribute(key, Float.valueOf(value));
-                } else if (valueType.equals("d")) {
-                    message.setAttribute(key, Double.valueOf(value));
-                } else if (valueType.equals("i")) {
-                    message.setAttribute(key,Integer.valueOf(value));
-                } else if (valueType.equals("str")) {
-                    message.setAttribute(key, value);
-                } else if (valueType.equals("jstr")) {
-                    boolean hasAdd = false;
-                    do {
-                        try {
-                            JSONObject jo = new JSONObject(value);
-                            message.setAttribute(key, jo);
-                            hasAdd = true;
-                            break;
-                        }catch (JSONException ignored){}
-                        try {
-                            JSONArray ja = new JSONArray(value);
-                            message.setAttribute(key, ja);
-                            hasAdd = true;
-                            break;
-                        }catch (JSONException ignored){}
-                    }while (hasAdd);
-                }
+            Map<String, Object> ext = extFromJson(json.getJSONObject("attr"));
+            for (Map.Entry<String, Object> entry : ext.entrySet()) {
+                setMessageAttribute(message, entry.getKey(), entry.getValue());
             }
         }
         return message;
+    }
+
+    private static void setMessageAttribute(EMMessage message, String key, Object value) {
+        if (value instanceof Boolean) {
+            message.setAttribute(key, (Boolean) value);
+        } else if (value instanceof Integer) {
+            message.setAttribute(key, (Integer) value);
+        } else if (value instanceof Long) {
+            message.setAttribute(key, (Long) value);
+        } else if (value instanceof Float) {
+            message.setAttribute(key, (Float) value);
+        } else if (value instanceof Double) {
+            message.setAttribute(key, (Double) value);
+        } else if (value instanceof JSONObject) {
+            message.setAttribute(key, (JSONObject) value);
+        } else if (value instanceof JSONArray) {
+            message.setAttribute(key, (JSONArray) value);
+        } else if (value instanceof String) {
+            message.setAttribute(key, (String) value);
+        }
+    }
+
+    public static Map<String, Object> extFromJson(JSONObject data) throws JSONException {
+        Map<String, Object> ext = new HashMap<>();
+        if (data == null) return ext;
+
+        Iterator iterator = data.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next().toString();
+            JSONObject result = data.getJSONObject(key);
+            String valueType = result.getString("type");
+            String value = result.getString("value");
+            if (valueType.equals("b")) {
+                ext.put(key, !value.equalsIgnoreCase("false"));
+            } else if (valueType.equals("l")) {
+                ext.put(key, Long.valueOf(value));
+            } else if (valueType.equals("f")) {
+                ext.put(key, Float.valueOf(value));
+            } else if (valueType.equals("d")) {
+                ext.put(key, Double.valueOf(value));
+            } else if (valueType.equals("i")) {
+                ext.put(key, Integer.valueOf(value));
+            } else if (valueType.equals("str")) {
+                ext.put(key, value);
+            } else if (valueType.equals("jstr")) {
+                try {
+                    ext.put(key, new JSONObject(value));
+                } catch (JSONException ignored) {
+                    try {
+                        ext.put(key, new JSONArray(value));
+                    } catch (JSONException ignoredAgain) {}
+                }
+            }
+        }
+        return ext;
     }
 
     public static JSONObject toJson(EMMessage message) throws JSONException{

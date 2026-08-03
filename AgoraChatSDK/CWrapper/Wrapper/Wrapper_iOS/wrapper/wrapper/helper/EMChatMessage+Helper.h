@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EMChatMessage (Helper) <EaseModeToJson>
 + (EMChatMessage *)fromJson:(NSDictionary *)aJson;
++ (NSDictionary *)extFromJson:(NSDictionary *)aJson;
 - (NSDictionary *)toJson;
 
 + (EMChatType)chatTypeFromInt:(int)aType;

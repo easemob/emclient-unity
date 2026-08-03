@@ -102,6 +102,36 @@ namespace sdk_wrapper
         return false;
     }
 
+    bool HasKeyInPreConfig()
+    {
+        if (nullptr == gClient) return false;
+
+        string appKey;
+        string appId;
+        gClient->getConfigManager()->getConfig(MY_APPKEY, appKey, CONFIG_FILE);
+        gClient->getConfigManager()->getConfig(MY_APPID, appId, CONFIG_FILE);
+        return appKey.size() > 0 || appId.size() > 0;
+    }
+
+    bool SaveKeyToConfig(int keyType, string& key)
+    {
+        if (nullptr == gClient || key.size() == 0) return false;
+
+        if (MY_KEY_TYPE_APPKEY == keyType) {
+            gClient->getConfigManager()->setConfig(MY_APPKEY, key);
+            gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
+            return true;
+        }
+
+        else if (MY_KEY_TYPE_APPID == keyType) {
+            gClient->getConfigManager()->setConfig(MY_APPID, key);
+            gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
+            return true;
+        }
+
+        return false;
+    }
+
     int GetNewKey(EMChatConfigsPtr cfg, string& key)
     {
         string app_key = cfg->getAppKey();
@@ -184,7 +214,12 @@ namespace sdk_wrapper
                 ThreadManager_AddListener();
 
                 keyInPreConfig = GetKeyInPreConfig(keyType);
-                ResetKey(keyType, keyInPreConfig, keyNew);
+                if (keyInPreConfig.compare(keyNew) != 0 && HasKeyInPreConfig()) {
+                    ResetKey(keyType, keyInPreConfig, keyNew);
+                }
+                else if (keyInPreConfig.compare(keyNew) != 0) {
+                    SaveKeyToConfig(keyType, keyNew);
+                }
             }
 
             if (nullptr != gClient) {
@@ -215,6 +250,13 @@ namespace sdk_wrapper
         Document d; d.Parse(local_jstr.c_str());
 
         string app_key = GetJsonValue_String(d, "appKey", "");
+
+        if (!CheckAppKey(app_key.c_str())) {
+            EMErrorPtr result(new EMError(EMError::INVALID_PARAM));
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            return nullptr;
+        }
 
         thread t([=]() {
             EMErrorPtr result = CLIENT->changeAppkey(app_key);
@@ -248,6 +290,13 @@ namespace sdk_wrapper
         Document d; d.Parse(local_jstr.c_str());
 
         string app_id = GetJsonValue_String(d, "appId", "");
+
+        if (app_id.length() == 0) {
+            EMErrorPtr result(new EMError(EMError::INVALID_PARAM));
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            return nullptr;
+        }
 
         thread t([=]() {
             EMErrorPtr result = CLIENT->changeAppId(app_id);
@@ -897,5 +946,3 @@ namespace sdk_wrapper
         }
     }
 }
-
-

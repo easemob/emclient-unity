@@ -8,6 +8,8 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 33
+        def easemobMacros = project.findProperty("EASEMOB_MACROS") ?: System.getenv("EASEMOB_MACROS") ?: ""
+        buildConfigField "boolean", "UseAgoraChatDomain", easemobMacros.split(/\s+/).contains("USE_AGORACHAT_DOMAIN") ? "true" : "false"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
