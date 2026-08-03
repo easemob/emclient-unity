@@ -1931,6 +1931,74 @@ namespace sdk_wrapper
         }
     }
 
+    string AttributesValue::ExtFromJson(const Value& jnode)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        if (!jnode.IsObject()) {
+            writer.EndObject();
+            return s.GetString();
+        }
+
+        for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
+            const Value& attr = iter->value;
+            if (!attr.IsObject()
+                || !attr.HasMember("type")
+                || !attr["type"].IsString()
+                || !attr.HasMember("value")
+                || !attr["value"].IsString()) {
+                continue;
+            }
+
+            string type = attr["type"].GetString();
+            string value = attr["value"].GetString();
+
+            if (type.compare("b") == 0) {
+                writer.Key(iter->name.GetString());
+#ifdef _WIN32
+                writer.Bool(_stricmp(value.c_str(), "false") != 0);
+#else
+                writer.Bool(strcasecmp(value.c_str(), "false") != 0);
+#endif
+            }
+            else if (type.compare("i") == 0) {
+                writer.Key(iter->name.GetString());
+                writer.Int(convertFromString<int32_t>(value));
+            }
+            else if (type.compare("l") == 0) {
+                writer.Key(iter->name.GetString());
+                writer.Int64(convertFromString<int64_t>(value));
+            }
+            else if (type.compare("f") == 0) {
+                writer.Key(iter->name.GetString());
+                writer.Double(convertFromString<float>(value));
+            }
+            else if (type.compare("d") == 0) {
+                writer.Key(iter->name.GetString());
+                writer.Double(convertFromString<double>(value));
+            }
+            else if (type.compare("str") == 0) {
+                writer.Key(iter->name.GetString());
+                writer.String(value.c_str());
+            }
+            else if (type.compare("jstr") == 0) {
+                writer.Key(iter->name.GetString());
+                Document d;
+                if (!d.Parse(value.c_str()).HasParseError() && (d.IsObject() || d.IsArray())) {
+                    d.Accept(writer);
+                }
+                else {
+                    writer.String(value.c_str());
+                }
+            }
+        }
+
+        writer.EndObject();
+        return s.GetString();
+    }
+
     void Conversation::ToJsonObject(Writer<StringBuffer>& writer, EMConversationPtr conversation)
     {
         writer.StartObject();
@@ -4088,4 +4156,3 @@ namespace sdk_wrapper
         return data;
     }
 }
-

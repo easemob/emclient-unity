@@ -13,7 +13,7 @@
     <repository type="GitHub" url="https://github.com/easemob/emclient-unity"/>
     <releaseNotes>AgoraChatSDK version 1.4.0</releaseNotes>
     <copyright>AgroChat</copyright>
-    <tags>stable 4.10.2</tags>
+    <tags>stable 4.16.0</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.5.2" />
       <group targetFramework=".NETFramework4.6.2" />

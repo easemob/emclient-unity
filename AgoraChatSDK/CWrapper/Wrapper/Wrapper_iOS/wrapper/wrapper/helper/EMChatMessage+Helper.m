@@ -62,41 +62,48 @@
     // msg.chatThread = [EMChatThread forJson:aJson[@"thread"]];
 //    msg.onlineState =
     msg.isChatThreadMessage = [aJson[@"isThread"] boolValue];
-    NSMutableDictionary *extDict = nil;
     if (aJson[@"attr"]) {
-        extDict = [NSMutableDictionary dictionary];
-        NSDictionary *attrDict = aJson[@"attr"];
-        NSArray *keys = attrDict.allKeys;
-        for (NSString *key in keys) {
-            NSDictionary *valueDict = attrDict[key];
-            NSString *type = valueDict[@"type"];
-            NSString *value = valueDict[@"value"];
-            if ([type isEqualToString:@"b"]) {
-                if ([value.lowercaseString isEqualToString:@"false"]) {
-                    extDict[key] = @(NO);
-                }else {
-                    extDict[key] = @(YES);
-                }
-            }else if ([type isEqualToString:@"i"]) {
-                extDict[key] = @([value intValue]);
-            }else if ([type isEqualToString:@"l"]) {
-                extDict[key] = @([value longLongValue]);
-            }else if ([type isEqualToString:@"f"]) {
-                extDict[key] = @([value floatValue]);
-            }else if ([type isEqualToString:@"d"]) {
-                extDict[key] = @([value doubleValue]);
-            }else if ([type isEqualToString:@"str"]) {
-                extDict[key] = value;
-            }else if ([type isEqualToString:@"jstr"]) {
-                extDict[key] = [NSArray fromString:value];
-            }
-        }
+        msg.ext = [EMChatMessage extFromJson:aJson[@"attr"]];
     }
     if(aJson[@"receiverList"]) {
         msg.receiverList = aJson[@"receiverList"];
     }
-    msg.ext = extDict;
     return msg;
+}
+
++ (NSDictionary *)extFromJson:(NSDictionary *)aJson
+{
+    if (![aJson isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+
+    NSMutableDictionary *extDict = [NSMutableDictionary dictionary];
+    NSArray *keys = aJson.allKeys;
+    for (NSString *key in keys) {
+        NSDictionary *valueDict = aJson[key];
+        NSString *type = valueDict[@"type"];
+        NSString *value = valueDict[@"value"];
+        if ([type isEqualToString:@"b"]) {
+            if ([value.lowercaseString isEqualToString:@"false"]) {
+                extDict[key] = @(NO);
+            }else {
+                extDict[key] = @(YES);
+            }
+        }else if ([type isEqualToString:@"i"]) {
+            extDict[key] = @([value intValue]);
+        }else if ([type isEqualToString:@"l"]) {
+            extDict[key] = @([value longLongValue]);
+        }else if ([type isEqualToString:@"f"]) {
+            extDict[key] = @([value floatValue]);
+        }else if ([type isEqualToString:@"d"]) {
+            extDict[key] = @([value doubleValue]);
+        }else if ([type isEqualToString:@"str"]) {
+            extDict[key] = value;
+        }else if ([type isEqualToString:@"jstr"]) {
+            extDict[key] = [NSArray fromString:value];
+        }
+    }
+    return extDict;
 }
 
 - (NSDictionary *)toJson
