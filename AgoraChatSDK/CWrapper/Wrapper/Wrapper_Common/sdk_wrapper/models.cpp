@@ -2439,18 +2439,12 @@ namespace sdk_wrapper
 
     void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec)
     {
-        writer.StartArray();
-        for (const auto& it : vec)
-        {
-            writer.String(it.first.c_str());
-        }
-        writer.EndArray();
-        /*writer.StartObject();
+        writer.StartObject();
         for (int i = 0; i < vec.size(); i++) {
             writer.Key(vec[i].first.c_str());
             writer.Int64(vec[i].second);
         }
-        writer.EndObject();*/
+        writer.EndObject();
     }
 
     void Group::ToJsonObjectWithGroupInfo(Writer<StringBuffer>& writer, EMGroupPtr group)
