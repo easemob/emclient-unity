@@ -34,7 +34,7 @@
     data[@"dnsUrl"] = self.dnsURL;
     data[@"areaCode"] = @(self.area);
     data[@"enableEmptyConversation"] = @(self.loadEmptyConversations);
-    data[@"osType"] = @(self.customOSType);
+    data[@"customOSType"] = @(self.customOSType);
     data[@"deviceName"] = self.customDeviceName;
     data[@"useReplacedMessageContents"] = @(self.useReplacedMessageContents);
     data[@"regardImportMsgAsRead"] = @(self.regardImportMessagesAsRead);
@@ -86,8 +86,8 @@
         options.loadEmptyConversations = [aJson[@"enableEmptyConversation"] boolValue];
     }
     options.customDeviceName = aJson[@"deviceName"];
-    if(aJson[@"osType"]) {
-        options.customOSType = [aJson[@"osType"] intValue];
+    if(aJson[@"customOSType"]) {
+        options.customOSType = [aJson[@"customOSType"] intValue];
     }
 
     if(aJson[@"useReplacedMessageContents"]) {
