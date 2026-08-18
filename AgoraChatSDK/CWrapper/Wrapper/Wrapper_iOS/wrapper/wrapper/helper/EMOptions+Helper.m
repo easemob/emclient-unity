@@ -14,7 +14,7 @@
     data[@"appKey"] = self.appkey;
     data[@"appId"] = self.appId;
     data[@"autoLogin"] = @(self.isAutoLogin);
-    data[@"debugModel"] = @(self.enableConsoleLog);
+    data[@"debugMode"] = @(self.enableConsoleLog);
     data[@"requireAck"] = @(self.enableRequireReadAck);
     data[@"requireDeliveryAck"] = @(self.enableDeliveryAck);
     data[@"sortMessageByServerTime"] = @(self.sortMessageByServerTime);
@@ -58,7 +58,7 @@
     options.platform = EMSDKPlatformUnity;  // Unity platform = 3
 
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];
-    options.enableConsoleLog = [aJson[@"debugModel"] boolValue];
+    options.enableConsoleLog = [aJson[@"debugMode"] boolValue];
     options.enableRequireReadAck = [aJson[@"requireAck"] boolValue];
     options.enableDeliveryAck = [aJson[@"requireDeliveryAck"] boolValue];
     options.sortMessageByServerTime = [aJson[@"sortMessageByServerTime"] boolValue];
