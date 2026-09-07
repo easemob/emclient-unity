@@ -2077,7 +2077,7 @@ namespace sdk_wrapper
     EMConversation::EMConversationType Conversation::ConversationTypeFromInt(int i)
     {
         EMConversation::EMConversationType type = EMConversation::EMConversationType::CHAT;
-        switch (type)
+        switch (i)
         {
         case 0: type = EMConversation::EMConversationType::CHAT; break;
         case 1: type = EMConversation::EMConversationType::GROUPCHAT; break;
