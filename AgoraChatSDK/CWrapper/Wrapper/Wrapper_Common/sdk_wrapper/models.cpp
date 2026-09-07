@@ -1833,7 +1833,7 @@ namespace sdk_wrapper
         if (jnode["value"].IsString())
             v = jnode["value"].GetString();
 
-        else if (jnode["value"].IsArray())
+        else if (jnode["value"].IsArray() || jnode["value"].IsObject())
             v = MyJson::ToJsonWithJsonObject(jnode["value"]);
 
         if (type.compare("b") == 0) {
