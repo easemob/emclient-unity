@@ -58,8 +58,8 @@ public class EMOptionsHelper {
         if (json.has("deviceName")) {
             options.setCustomDeviceName(json.optString("deviceName"));
         }
-        if (json.has("osType")) {
-            options.setCustomOSPlatform(json.optInt("osType"));
+        if (json.has("customOSType")) {
+            options.setCustomOSPlatform(json.optInt("customOSType"));
         }
         if (json.has("regardImportMsgAsRead")) {
             options.setRegardImportedMsgAsRead(json.optBoolean("regardImportMsgAsRead"));

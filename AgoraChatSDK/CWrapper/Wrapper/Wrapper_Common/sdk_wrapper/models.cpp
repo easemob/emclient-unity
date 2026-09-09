@@ -453,11 +453,13 @@ namespace sdk_wrapper
             configs->setUseReplacedMessageContents(use_replaced_message_contents);
         }
 
+        bool os_custom_set = false;
         if (jnode.HasMember("customOSType") && jnode["customOSType"].IsInt()) {
             int custom_os_type = jnode["customOSType"].GetInt();
             if (-1 != custom_os_type) {
                 configs->setOs(EMChatConfigs::OSType::OS_CUSTOM);
                 configs->setOSCustomValue(custom_os_type);
+                os_custom_set = true;
             }
         }
 
@@ -484,7 +486,9 @@ namespace sdk_wrapper
         //TODO: need to Area code later
 
 #ifndef _WIN32
-        configs->setOs(EMChatConfigs::OS_OSX);
+        if (!os_custom_set) {
+            configs->setOs(EMChatConfigs::OS_OSX);
+        }
 
         string uuid = GetMacUuid();
         if (uuid.size() > 0)
@@ -494,7 +498,9 @@ namespace sdk_wrapper
         if (did.size() > 0)
             configs->setDid(did);
 #else
-        configs->setOs(EMChatConfigs::OS_MSWIN);
+        if (!os_custom_set) {
+            configs->setOs(EMChatConfigs::OS_MSWIN);
+        }
 
         string did = GetWinDid(false);
         if (did.size() > 0)
@@ -1827,7 +1833,7 @@ namespace sdk_wrapper
         if (jnode["value"].IsString())
             v = jnode["value"].GetString();
 
-        else if (jnode["value"].IsArray())
+        else if (jnode["value"].IsArray() || jnode["value"].IsObject())
             v = MyJson::ToJsonWithJsonObject(jnode["value"]);
 
         if (type.compare("b") == 0) {
@@ -2071,7 +2077,7 @@ namespace sdk_wrapper
     EMConversation::EMConversationType Conversation::ConversationTypeFromInt(int i)
     {
         EMConversation::EMConversationType type = EMConversation::EMConversationType::CHAT;
-        switch (type)
+        switch (i)
         {
         case 0: type = EMConversation::EMConversationType::CHAT; break;
         case 1: type = EMConversation::EMConversationType::GROUPCHAT; break;
@@ -2433,18 +2439,12 @@ namespace sdk_wrapper
 
     void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec)
     {
-        writer.StartArray();
-        for (const auto& it : vec)
-        {
-            writer.String(it.first.c_str());
-        }
-        writer.EndArray();
-        /*writer.StartObject();
+        writer.StartObject();
         for (int i = 0; i < vec.size(); i++) {
             writer.Key(vec[i].first.c_str());
             writer.Int64(vec[i].second);
         }
-        writer.EndObject();*/
+        writer.EndObject();
     }
 
     void Group::ToJsonObjectWithGroupInfo(Writer<StringBuffer>& writer, EMGroupPtr group)

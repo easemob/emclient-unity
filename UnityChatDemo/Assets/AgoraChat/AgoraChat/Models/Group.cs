@@ -310,13 +310,21 @@ namespace AgoraChat
             MemberList = List.StringListFromJsonArray(jsonObject["memberList"]);
             AdminList = List.StringListFromJsonArray(jsonObject["adminList"]);
             BlockList = List.StringListFromJsonArray(jsonObject["blockList"]);
-            Dictionary<string, long> muteListMap = Dictionary.SimpleTypeDictionaryFromJsonObject<long>(jsonObject["muteList"]);
-            MuteList = new List<string>();
-            if (muteListMap != null)
+            JSONNode muteListNode = jsonObject["muteList"];
+            if (muteListNode != null && muteListNode.IsArray)
             {
-                foreach (string member in muteListMap.Keys)
+                MuteList = List.StringListFromJsonArray(muteListNode);
+            }
+            else
+            {
+                Dictionary<string, long> muteListMap = Dictionary.SimpleTypeDictionaryFromJsonObject<long>(muteListNode);
+                MuteList = new List<string>();
+                if (muteListMap != null)
                 {
-                    MuteList.Add(member);
+                    foreach (string member in muteListMap.Keys)
+                    {
+                        MuteList.Add(member);
+                    }
                 }
             }
             MessageBlocked = jsonObject["block"];

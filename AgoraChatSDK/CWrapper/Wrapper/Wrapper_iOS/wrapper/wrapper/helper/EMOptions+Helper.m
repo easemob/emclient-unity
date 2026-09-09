@@ -14,7 +14,7 @@
     data[@"appKey"] = self.appkey;
     data[@"appId"] = self.appId;
     data[@"autoLogin"] = @(self.isAutoLogin);
-    data[@"debugModel"] = @(self.enableConsoleLog);
+    data[@"debugMode"] = @(self.enableConsoleLog);
     data[@"requireAck"] = @(self.enableRequireReadAck);
     data[@"requireDeliveryAck"] = @(self.enableDeliveryAck);
     data[@"sortMessageByServerTime"] = @(self.sortMessageByServerTime);
@@ -34,7 +34,7 @@
     data[@"dnsUrl"] = self.dnsURL;
     data[@"areaCode"] = @(self.area);
     data[@"enableEmptyConversation"] = @(self.loadEmptyConversations);
-    data[@"osType"] = @(self.customOSType);
+    data[@"customOSType"] = @(self.customOSType);
     data[@"deviceName"] = self.customDeviceName;
     data[@"useReplacedMessageContents"] = @(self.useReplacedMessageContents);
     data[@"regardImportMsgAsRead"] = @(self.regardImportMessagesAsRead);
@@ -58,7 +58,7 @@
     options.platform = EMSDKPlatformUnity;  // Unity platform = 3
 
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];
-    options.enableConsoleLog = [aJson[@"debugModel"] boolValue];
+    options.enableConsoleLog = [aJson[@"debugMode"] boolValue];
     options.enableRequireReadAck = [aJson[@"requireAck"] boolValue];
     options.enableDeliveryAck = [aJson[@"requireDeliveryAck"] boolValue];
     options.sortMessageByServerTime = [aJson[@"sortMessageByServerTime"] boolValue];
@@ -86,8 +86,8 @@
         options.loadEmptyConversations = [aJson[@"enableEmptyConversation"] boolValue];
     }
     options.customDeviceName = aJson[@"deviceName"];
-    if(aJson[@"osType"]) {
-        options.customOSType = [aJson[@"osType"] intValue];
+    if(aJson[@"customOSType"]) {
+        options.customOSType = [aJson[@"customOSType"] intValue];
     }
 
     if(aJson[@"useReplacedMessageContents"]) {
