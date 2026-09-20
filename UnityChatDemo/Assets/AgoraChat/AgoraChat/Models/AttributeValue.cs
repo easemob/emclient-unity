@@ -302,7 +302,14 @@ namespace AgoraChat
                     break;
                 case "jstr":
                     VType = AttributeValueType.JSONSTRING;
-                    JsonStringV = value;
+                    if (jvalue != null && (jvalue.IsObject || jvalue.IsArray))
+                    {
+                        JsonStringV = jvalue.ToString();
+                    }
+                    else
+                    {
+                        JsonStringV = value;
+                    }
                     break;
                 default:
                     break;

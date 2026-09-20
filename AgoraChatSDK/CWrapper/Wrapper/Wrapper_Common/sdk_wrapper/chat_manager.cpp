@@ -1164,7 +1164,7 @@ namespace sdk_wrapper {
         Document d; d.Parse(jstr);
 
         string keywords = GetJsonValue_String(d, "keywords", "");
-        int64_t timestamp = GetJsonValue_Int64(d, "timestamp", 0);
+        int64_t timestamp = GetJsonValue_Int64(d, "timestamp", -1);
         string from = GetJsonValue_String(d, "from", "");
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         int var_scope = GetJsonValue_Int(d, "scope", 0);

@@ -24,10 +24,10 @@ public class EMGroupHelper {
         data.put("isDisabled", group.isDisabled());
         data.put("isMuteAll", group.isAllMemberMuted());
         data.put("permissionType", intTypeFromGroupPermissionType(group.getGroupPermissionType()));
-        data.put("maxUserCount", group.getMemberCount());
+        data.put("maxUserCount", group.getMaxUserCount());
         data.put("isMemberOnly", group.isMemberOnly());
         data.put("isMemberAllowToInvite", group.isMemberAllowToInvite());
-        data.put("ext", group.getGroupId());
+        data.put("ext", group.getExtension());
         data.put("avatar", group.getGroupAvatar());
         return data;
     }

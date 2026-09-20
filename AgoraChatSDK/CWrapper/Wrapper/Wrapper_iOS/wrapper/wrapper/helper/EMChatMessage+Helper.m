@@ -100,7 +100,22 @@
         }else if ([type isEqualToString:@"str"]) {
             extDict[key] = value;
         }else if ([type isEqualToString:@"jstr"]) {
-            extDict[key] = [NSArray fromString:value];
+            id raw = valueDict[@"value"];
+            if ([raw isKindOfClass:[NSDictionary class]] || [raw isKindOfClass:[NSArray class]]) {
+                extDict[key] = raw;
+            } else if ([raw isKindOfClass:[NSString class]]) {
+                NSString *jsonText = (NSString *)raw;
+                id parsed = nil;
+                if (jsonText.length > 0) {
+                    NSData *data = [jsonText dataUsingEncoding:NSUTF8StringEncoding];
+                    parsed = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+                }
+                if ([parsed isKindOfClass:[NSDictionary class]] || [parsed isKindOfClass:[NSArray class]]) {
+                    extDict[key] = parsed;
+                } else {
+                    extDict[key] = jsonText;
+                }
+            }
         }
     }
     return extDict;

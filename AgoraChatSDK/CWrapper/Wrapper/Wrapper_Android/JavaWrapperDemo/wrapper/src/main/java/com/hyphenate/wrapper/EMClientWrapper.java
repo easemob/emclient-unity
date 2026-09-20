@@ -1,6 +1,7 @@
 package com.hyphenate.wrapper;
 
 import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMultiDeviceListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMDeviceInfo;
@@ -141,6 +142,10 @@ public class EMClientWrapper extends EMBaseWrapper {
 
     private String changeAppKey(JSONObject param, EMWrapperCallback callback) throws JSONException {
         String appKey = param.getString("appKey");
+        if (!isValidAppKey(appKey)) {
+            onErrorCode(EMError.INVALID_PARAM, "App key is invalid", callback);
+            return null;
+        }
         asyncRunnable(()->{
             try {
                 EMClient.getInstance().changeAppkey(appKey);
@@ -154,6 +159,10 @@ public class EMClientWrapper extends EMBaseWrapper {
 
     private String changeAppId(JSONObject param, EMWrapperCallback callback) throws JSONException {
         String appId = param.getString("appId");
+        if (appId == null || appId.length() == 0) {
+            onErrorCode(EMError.INVALID_PARAM, "AppId is invalid", callback);
+            return null;
+        }
         asyncRunnable(()->{
             try {
                 EMClient.getInstance().changeAppId(appId);
@@ -163,6 +172,15 @@ public class EMClientWrapper extends EMBaseWrapper {
             }
         });
         return null;
+    }
+
+    // Same rule as desktop CheckAppKey: non-empty, '#' not at either end.
+    private boolean isValidAppKey(String appKey) {
+        if (appKey == null || appKey.length() == 0) {
+            return false;
+        }
+        int pos = appKey.indexOf('#');
+        return pos > 0 && pos < appKey.length() - 1;
     }
 
     private String createAccount(JSONObject param, EMWrapperCallback callback) throws JSONException {

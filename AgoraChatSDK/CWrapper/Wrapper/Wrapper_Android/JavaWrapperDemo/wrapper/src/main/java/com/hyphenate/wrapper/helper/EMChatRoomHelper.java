@@ -1,9 +1,12 @@
 package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMChatRoom;
+import com.hyphenate.wrapper.util.EMHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class EMChatRoomHelper {
     public static JSONObject toJson(EMChatRoom chatRoom) throws JSONException {
@@ -18,7 +21,8 @@ public class EMChatRoomHelper {
         data.put("adminList", chatRoom.getAdminList());
         data.put("memberList", chatRoom.getMemberList());
         data.put("blockList", chatRoom.getBlacklist());
-        data.put("muteList", chatRoom.getMuteList().keySet().toArray());
+        data.put("muteList", EMHelper.stringListToJsonArray(
+                new ArrayList<>(chatRoom.getMuteList().keySet())));
         data.put("isMuteAll", chatRoom.isAllMemberMuted());
         data.put("announcement", chatRoom.getAnnouncement());
         data.put("permissionType", intTypeFromPermissionType(chatRoom.getChatRoomPermissionType()));
